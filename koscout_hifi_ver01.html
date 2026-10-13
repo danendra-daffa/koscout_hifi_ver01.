@@ -1,0 +1,3113 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KOSCOUT.ID — Hi-Fi Ver.01 (Gojek Design System Edition)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Plus Jakarta Sans', 'Maison Neue', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            gojek: {
+              green: '#00AA13',       // Gojek Primary Green
+              darkGreen: '#00880D',   // Gojek Secondary Green
+              deepGreen: '#00680A',   // Active / Deep Green
+              lightGreen: '#EAFFEA',  // Tint 1
+              mint: '#F0FDF4',        // Tint 2
+              dark: '#101820',        // Gojek Black / Dark 100
+              surface: '#1C1D1D',     // Gojek Dark Surface
+              muted: '#727272',       // Gray content
+              border: '#E8E8E8',      // Border primary
+              bgLight: '#FAFAFA',     // Canvas background
+              red: '#EE2737',         // Gojek Red / Alert
+              blue: '#00AED6',        // Gojek Blue
+              purple: '#93278F',      // Gojek Purple
+              orange: '#F97316',      // Gojek Orange
+              amber: '#FFC41C',       // Rating / Warning
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    /* Asphalt Design Tokens & Custom Styles */
+    :root {
+      --gojek-green: #00AA13;
+      --gojek-darkgreen: #00880D;
+      --gojek-dark: #101820;
+    }
+    
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #F1F5F9;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #CBD5E1;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94A3B8;
+    }
+
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
+    /* Smartphone Frame Shadow */
+    .phone-shadow {
+      box-shadow: 0 25px 60px -15px rgba(16, 24, 32, 0.45), 0 0 0 10px #101820, 0 0 0 12px #374151;
+    }
+
+    /* Radar Pulse Animation for Scout Live Dispatch */
+    @keyframes ping-radar {
+      0% { transform: scale(0.95); opacity: 0.85; }
+      100% { transform: scale(2.4); opacity: 0; }
+    }
+    .radar-pulse {
+      animation: ping-radar 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+    }
+
+    /* Solv Icon Mark */
+    .solv-mark {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .solv-mark::before {
+      content: '';
+      display: block;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      border: 3.5px solid currentColor;
+    }
+    .solv-mark::after {
+      content: '';
+      position: absolute;
+      width: 32%;
+      height: 32%;
+      background: currentColor;
+      border-radius: 50%;
+    }
+
+    /* Asphalt Pill Button Style */
+    .btn-asphalt {
+      transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+      font-weight: 700;
+      border-radius: 9999px;
+    }
+    .btn-asphalt:active {
+      transform: scale(0.96);
+    }
+
+    /* Tab switcher pill */
+    .tab-active {
+      background-color: #00AA13;
+      color: #FFFFFF;
+    }
+    .tab-inactive {
+      background-color: transparent;
+      color: #727272;
+    }
+    .tab-inactive:hover {
+      color: #101820;
+    }
+
+    /* Map Pattern Grid */
+    .map-grid {
+      background-size: 24px 24px;
+      background-image: 
+        linear-gradient(to right, rgba(0,0,0,0.05) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(0,0,0,0.05) 1px, transparent 1px);
+    }
+  </style>
+</head>
+<body class="bg-[#F4F5F7] text-[#101820] font-sans antialiased min-h-screen flex flex-col selection:bg-gojek-green selection:text-white">
+
+  <!-- ========================================================================= -->
+  <!-- TOP GLOBAL HEADER (NAVIGATION & VIEW SWITCHER) -->
+  <!-- ========================================================================= -->
+  <header class="bg-[#101820] text-white border-b border-gray-800 sticky top-0 z-50 shadow-md">
+    <div class="max-w-7xl mx-auto px-4 lg:px-8 h-16 flex items-center justify-between">
+      
+      <!-- Brand & Version Tag -->
+      <div class="flex items-center gap-3">
+        <a href="#website" onclick="switchMainView('website')" class="flex items-center gap-2 group">
+          <div class="w-8 h-8 solv-mark text-gojek-green group-hover:scale-105 transition-transform"></div>
+          <span class="font-extrabold text-xl tracking-tight text-white">KOSCOUT<span class="text-gojek-green">.ID</span></span>
+        </a>
+        <div class="hidden sm:flex items-center gap-2 pl-3 border-l border-gray-700">
+          <span class="bg-gojek-green/20 text-emerald-400 text-xs font-mono font-bold px-2 py-0.5 rounded-full border border-emerald-500/30">
+            Hi-Fi Ver.01
+          </span>
+          <span class="text-xs text-gray-400 font-medium">Gojek Design System Edition</span>
+        </div>
+      </div>
+
+      <!-- View Modes Switcher: Website vs Mobile Canvas vs Interactive Simulator -->
+      <div class="flex items-center bg-gray-900/90 p-1 rounded-full border border-gray-700 text-xs font-bold">
+        <button id="btn-mode-website" onclick="switchMainView('website')" class="px-3.5 py-1.5 rounded-full transition-all flex items-center gap-1.5 bg-gojek-green text-white shadow-sm">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+          <span class="hidden md:inline">Desktop</span> Portal
+        </button>
+        <button id="btn-mode-canvas" onclick="switchMainView('canvas')" class="px-3.5 py-1.5 rounded-full transition-all flex items-center gap-1.5 text-gray-300 hover:text-white">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+          <span>5-Screen Canvas</span>
+        </button>
+        <button id="btn-mode-sim" onclick="switchMainView('simulator')" class="px-3.5 py-1.5 rounded-full transition-all flex items-center gap-1.5 text-gray-300 hover:text-white">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+          <span>Phone Simulator</span>
+        </button>
+      </div>
+
+      <!-- Quick Action Buttons -->
+      <div class="hidden lg:flex items-center gap-3">
+        <button onclick="switchMainView('simulator'); goToSimScreen(2);" class="btn-asphalt bg-gojek-green hover:bg-gojek-darkGreen text-white text-xs px-4 py-2 flex items-center gap-1.5 shadow-md shadow-gojek-green/20">
+          <span>Pesan Scout Sekarang</span>
+          <span>&rarr;</span>
+        </button>
+        <button onclick="toggleProtocolModal(true)" class="btn-asphalt bg-gray-800 hover:bg-gray-700 text-gray-200 text-xs px-3.5 py-2 border border-gray-700 flex items-center gap-1.5">
+          <span>SOP 25 Poin Audit</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ========================================================================= -->
+  <!-- VIEW 1: GOJEK OFFICIAL WEBSITE REPLICATION (DESKTOP PORTAL) -->
+  <!-- ========================================================================= -->
+  <div id="view-website" class="w-full flex flex-col">
+    
+    <!-- Gojek Website Secondary Subheader Navigation -->
+    <nav class="bg-white border-b border-gray-200 py-3.5 px-4 lg:px-12 sticky top-[64px] z-40 shadow-xs">
+      <div class="max-w-7xl mx-auto flex items-center justify-between">
+        <div class="flex items-center gap-8">
+          <a href="#hero" class="flex items-center gap-2">
+            <div class="w-7 h-7 solv-mark text-gojek-green"></div>
+            <span class="font-extrabold text-lg text-[#101820] tracking-tight">KOSCOUT<span class="text-gojek-green">.ID</span></span>
+          </a>
+          <div class="hidden md:flex items-center gap-6 text-sm font-bold text-gray-700">
+            <a href="#layanan" class="hover:text-gojek-green transition-colors">Paket Layanan</a>
+            <a href="#skala" class="hover:text-gojek-green transition-colors">Skala & Dampak</a>
+            <a href="#kalkulator" class="hover:text-gojek-green transition-colors">Hitung Tarif</a>
+            <a href="#mitra" class="hover:text-gojek-green transition-colors">Gabung Mitra Scout</a>
+            <a href="#testimoni" class="hover:text-gojek-green transition-colors">Testimoni Maba</a>
+          </div>
+        </div>
+        <div class="flex items-center gap-3">
+          <div class="hidden sm:flex items-center gap-1.5 text-xs font-bold text-gray-600 border border-gray-200 px-2.5 py-1 rounded-full">
+            <span>🇮🇩 Tembalang, Undip</span>
+          </div>
+          <button onclick="switchMainView('simulator'); goToSimScreen(1);" class="btn-asphalt bg-gojek-green hover:bg-gojek-darkGreen text-white text-xs px-4 py-2 flex items-center gap-2 shadow-md shadow-gojek-green/20">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+            <span>Buka Web App</span>
+          </button>
+        </div>
+      </div>
+    </nav>
+
+    <!-- SECTION 1: GOJEK HERO BANNER SECTION (#PastiAdaJalan Style) -->
+    <section id="hero" class="bg-[#101820] text-white py-16 lg:py-24 relative overflow-hidden">
+      <!-- Background Ambient Glow -->
+      <div class="absolute -right-40 -top-40 w-[600px] h-[600px] bg-gojek-green/15 rounded-full blur-3xl pointer-events-none"></div>
+      <div class="absolute -left-20 bottom-0 w-[450px] h-[450px] bg-gojek-blue/10 rounded-full blur-3xl pointer-events-none"></div>
+
+      <div class="max-w-7xl mx-auto px-4 lg:px-12 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center relative z-10">
+        
+        <!-- Left Hero Copy (Gojek Bold Typography) -->
+        <div class="lg:col-span-7 space-y-6 text-left">
+          <div class="inline-flex items-center gap-2 bg-white/10 border border-white/20 backdrop-blur-md px-3.5 py-1.5 rounded-full">
+            <div class="w-3.5 h-3.5 solv-mark text-gojek-green"></div>
+            <span class="text-xs font-bold tracking-wide uppercase text-emerald-300">#PastiAdaJalan • KOSCOUT Super App Tembalang Undip</span>
+          </div>
+
+          <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[1.15]">
+            Ada KOSCOUT,<br>
+            Cari Kost di Semarang<br>
+            <span class="text-gojek-green underline decoration-wavy decoration-gojek-green/40">Pasti Beres.</span>
+          </h1>
+
+          <p class="text-base sm:text-lg text-gray-300 font-normal leading-relaxed max-w-xl">
+            Layanan On-Demand Cek Kost pertama di Indonesia untuk mahasiswa baru Undip & orang tua. Mitra Scout kating Tembalang hadir langsung ke lokasi dalam rata-rata <strong>42 menit</strong>, melaksanakan <strong>Audit Fisik 25 Poin</strong> (debit air, stopkontak, sinyal HP & WiFi, kelembapan), <strong>Live Video Walkthrough 2 Arah</strong>, serta <strong>Garansi Rekber Escrow DP Anti-Tipu 100%</strong>.
+          </p>
+
+          <!-- Hero CTAs -->
+          <div class="flex flex-wrap items-center gap-4 pt-2">
+            <button onclick="switchMainView('simulator'); goToSimScreen(2);" class="btn-asphalt bg-gojek-green hover:bg-gojek-darkGreen text-white text-sm sm:text-base px-7 py-3.5 flex items-center gap-2.5 shadow-xl shadow-gojek-green/30">
+              <div class="w-4 h-4 solv-mark text-white"></div>
+              <span>Pesan Scout Sekarang</span>
+            </button>
+
+            <button onclick="toggleVideoCallModal(true)" class="btn-asphalt bg-white/10 hover:bg-white/20 border border-white/30 text-white text-sm sm:text-base px-6 py-3.5 flex items-center gap-2 transition-all">
+              <svg class="w-5 h-5 text-gojek-green" fill="currentColor" viewBox="0 0 20 20"><path d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"></path></svg>
+              <span>Simulasi Live Walkthrough</span>
+            </button>
+          </div>
+
+          <!-- Quick Trust Badges -->
+          <div class="grid grid-cols-3 gap-4 pt-6 border-t border-gray-800">
+            <div>
+              <div class="text-2xl font-black text-white flex items-center gap-1">
+                <span>1.850</span><span class="text-gojek-green">+</span>
+              </div>
+              <div class="text-xs text-gray-400 mt-0.5">Kost Tervalidasi Undip</div>
+            </div>
+            <div>
+              <div class="text-2xl font-black text-white flex items-center gap-1">
+                <span>42</span><span class="text-gojek-green">Mnt</span>
+              </div>
+              <div class="text-xs text-gray-400 mt-0.5">Rata-rata Tiba di Lokasi</div>
+            </div>
+            <div>
+              <div class="text-2xl font-black text-emerald-400 flex items-center gap-1">
+                <span>100</span><span class="text-gojek-green">%</span>
+              </div>
+              <div class="text-xs text-gray-400 mt-0.5">Escrow Refund Anti-Scam</div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Right Hero Interactive App Preview (Gojek Style Hero Phone Art) -->
+        <div class="lg:col-span-5 flex justify-center relative py-6">
+          
+          <!-- Floating Badge 1: Live Status -->
+          <div class="hidden sm:flex absolute -left-10 top-12 bg-white text-[#101820] p-3 rounded-2xl shadow-2xl border border-gray-200 z-30 items-center gap-3 animate-bounce" style="animation-duration: 4s;">
+            <div class="w-10 h-10 rounded-full bg-gojek-green/15 text-gojek-green flex items-center justify-center font-bold">
+              🛵
+            </div>
+            <div>
+              <div class="text-xs font-bold">Scout Dimas OTW</div>
+              <div class="text-[11px] text-gray-500">Kost Wisma Permai • 6 Menit</div>
+            </div>
+          </div>
+
+          <!-- Floating Badge 2: 25 Poin Lolos -->
+          <div class="hidden sm:flex absolute -right-10 top-72 bg-white text-[#101820] p-3 rounded-2xl shadow-2xl border border-gray-200 z-30 items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold">
+              ✓
+            </div>
+            <div>
+              <div class="text-xs font-bold text-emerald-800">Skor Audit 96/100</div>
+              <div class="text-[11px] text-gray-500">Air Deras & Sinyal 4G Stabil</div>
+            </div>
+          </div>
+
+          <!-- Hero Phone Frame -->
+          <div class="w-[320px] h-[640px] bg-[#101820] rounded-[48px] p-3 phone-shadow relative overflow-hidden border-4 border-gray-800">
+            <!-- Dynamic Island -->
+            <div class="absolute top-4 left-1/2 -translate-x-1/2 w-24 h-4 bg-black rounded-full z-40"></div>
+
+            <!-- Screen View -->
+            <div class="w-full h-full bg-[#FAFAFA] rounded-[38px] overflow-hidden flex flex-col text-slate-800 text-xs">
+              
+              <!-- Status bar -->
+              <div class="h-8 px-6 pt-2 flex items-center justify-between text-[10px] font-bold text-gray-800 shrink-0">
+                <span>09:41</span>
+                <div class="flex items-center gap-1">
+                  <span>5G</span>
+                  <div class="w-4 h-2 bg-gray-800 rounded-2xs"></div>
+                </div>
+              </div>
+
+              <!-- Mini Header -->
+              <div class="p-3 pb-2 space-y-2 shrink-0">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-1.5">
+                    <div class="w-5 h-5 solv-mark text-gojek-green"></div>
+                    <span class="font-extrabold text-sm tracking-tight">KOSCOUT</span>
+                  </div>
+                  <div class="w-7 h-7 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300 flex items-center justify-center text-[10px] font-bold">
+                    DS
+                  </div>
+                </div>
+
+                <!-- Mini Search Pill -->
+                <div onclick="switchMainView('simulator'); goToSimScreen(1);" class="bg-white border border-gray-200 rounded-full px-3 py-1.5 flex items-center gap-2 shadow-xs text-gray-400 text-[11px] cursor-pointer hover:border-gojek-green transition-colors">
+                  <svg class="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                  <span class="text-gray-600 font-medium truncate">Cari kost di Tembalang: Sirojudin...</span>
+                </div>
+              </div>
+
+              <!-- Mini Wallet Card -->
+              <div class="mx-3 bg-gradient-to-r from-blue-700 to-blue-600 text-white rounded-2xl p-2.5 shadow-sm space-y-2 shrink-0">
+                <div class="flex items-center justify-between text-[11px]">
+                  <div class="font-bold flex items-center gap-1">
+                    <span class="w-2 h-2 rounded-full bg-cyan-300"></span>
+                    <span>KOSPAY • Escrow Shield</span>
+                  </div>
+                  <span class="font-mono font-bold">Rp 485.000</span>
+                </div>
+                <div class="grid grid-cols-4 gap-1 text-center pt-1 border-t border-white/20 text-[9px]">
+                  <div onclick="switchMainView('simulator'); goToSimScreen(5);" class="flex flex-col items-center cursor-pointer"><span class="w-6 h-6 rounded-full bg-white/20 flex items-center justify-center">💳</span><span>Bayar DP</span></div>
+                  <div onclick="alert('Top Up via Virtual Account BCA / Mandiri / GoPay')" class="flex flex-col items-center cursor-pointer"><span class="w-6 h-6 rounded-full bg-white/20 flex items-center justify-center">➕</span><span>Top Up</span></div>
+                  <div onclick="switchMainView('simulator'); goToSimScreen(5);" class="flex flex-col items-center cursor-pointer"><span class="w-6 h-6 rounded-full bg-white/20 flex items-center justify-center">🛡️</span><span>Proteksi</span></div>
+                  <div onclick="alert('Garansi 100% Uang Kembali bila tidak sesuai hasil audit')" class="flex flex-col items-center cursor-pointer"><span class="w-6 h-6 rounded-full bg-white/20 flex items-center justify-center">✓</span><span>Garansi</span></div>
+                </div>
+              </div>
+
+              <!-- Mini 8-Grid KOSCOUT Core Features -->
+              <div class="p-3 grid grid-cols-4 gap-2 text-center text-[10px] font-bold">
+                <div onclick="selectOrderPackage('single'); switchMainView('simulator'); goToSimScreen(2);" class="flex flex-col items-center gap-1 cursor-pointer">
+                  <div class="w-10 h-10 rounded-2xl bg-gojek-green text-white flex items-center justify-center text-base shadow-sm hover:scale-105 transition-transform">🛵</div>
+                  <span class="text-[9px]">Single Scout</span>
+                </div>
+                <div onclick="selectOrderPackage('triple'); switchMainView('simulator'); goToSimScreen(2);" class="flex flex-col items-center gap-1 cursor-pointer">
+                  <div class="w-10 h-10 rounded-2xl bg-gojek-blue text-white flex items-center justify-center text-base shadow-sm hover:scale-105 transition-transform">📋</div>
+                  <span class="text-[9px]">Triple Bundle</span>
+                </div>
+                <div onclick="selectOrderPackage('vip'); switchMainView('simulator'); goToSimScreen(2);" class="flex flex-col items-center gap-1 cursor-pointer">
+                  <div class="w-10 h-10 rounded-2xl bg-[#EE2737] text-white flex items-center justify-center text-base shadow-sm hover:scale-105 transition-transform">⚡</div>
+                  <span class="text-[9px]">Mandiri Rush</span>
+                </div>
+                <div onclick="toggleVideoCallModal(true)" class="flex flex-col items-center gap-1 cursor-pointer">
+                  <div class="w-10 h-10 rounded-2xl bg-[#93278F] text-white flex items-center justify-center text-base shadow-sm hover:scale-105 transition-transform">📹</div>
+                  <span class="text-[9px]">Live Tour</span>
+                </div>
+                <div onclick="switchMainView('simulator'); goToSimScreen(5);" class="flex flex-col items-center gap-1 cursor-pointer">
+                  <div class="w-10 h-10 rounded-2xl bg-[#00880D] text-white flex items-center justify-center text-base shadow-sm hover:scale-105 transition-transform">🛡️</div>
+                  <span class="text-[9px]">Escrow DP</span>
+                </div>
+                <div onclick="toggleProtocolModal(true)" class="flex flex-col items-center gap-1 cursor-pointer">
+                  <div class="w-10 h-10 rounded-2xl bg-[#0284C7] text-white flex items-center justify-center text-base shadow-sm hover:scale-105 transition-transform">🔍</div>
+                  <span class="text-[9px]">Audit 25 Poin</span>
+                </div>
+                <div onclick="openScoutMoverModal()" class="flex flex-col items-center gap-1 cursor-pointer">
+                  <div class="w-10 h-10 rounded-2xl bg-[#F97316] text-white flex items-center justify-center text-base shadow-sm hover:scale-105 transition-transform">📦</div>
+                  <span class="text-[9px]">Scout Mover</span>
+                </div>
+                <div onclick="openTanyaKatingModal()" class="flex flex-col items-center gap-1 cursor-pointer">
+                  <div class="w-10 h-10 rounded-2xl bg-[#059669] text-white flex items-center justify-center text-base shadow-sm hover:scale-105 transition-transform">💬</div>
+                  <span class="text-[9px]">Tanya Kating</span>
+                </div>
+              </div>
+
+              <!-- Mini Active Order Banner -->
+              <div onclick="switchMainView('simulator'); goToSimScreen(3);" class="mx-3 p-2 bg-emerald-50 border border-emerald-200 rounded-xl flex items-center justify-between text-[10px] cursor-pointer hover:bg-emerald-100 transition-colors">
+                <div class="flex items-center gap-2">
+                  <span class="w-2 h-2 rounded-full bg-emerald-600 animate-ping"></span>
+                  <div>
+                    <span class="font-bold text-emerald-900">Scout OTW Tembalang</span>
+                    <p class="text-[9px] text-emerald-700">Kost Wisma Permai • 6 min</p>
+                  </div>
+                </div>
+                <span class="font-bold text-emerald-800">&rarr;</span>
+              </div>
+
+              <!-- Mini Bottom Bar -->
+              <div class="mt-auto bg-white border-t border-gray-200 py-2 px-4 flex items-center justify-around text-gray-400 text-[9px] font-bold">
+                <span onclick="switchMainView('simulator'); goToSimScreen(1);" class="text-gojek-green flex flex-col items-center cursor-pointer">🏠 Beranda</span>
+                <span onclick="switchMainView('simulator'); goToSimScreen(3);" class="flex flex-col items-center cursor-pointer hover:text-gray-900">📑 Pesanan</span>
+                <span onclick="openTanyaKatingModal()" class="flex flex-col items-center cursor-pointer hover:text-gray-900">💬 Chat</span>
+                <span onclick="switchMainView('simulator'); goToSimScreen(5);" class="flex flex-col items-center cursor-pointer hover:text-gray-900">🛡️ Escrow DP</span>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- SECTION 2: 3 CORE SERVICE PILLARS (REPRESENTING KOSCOUT REAL VALUE PROPOSITIONS) -->
+    <section id="layanan" class="py-20 bg-white">
+      <div class="max-w-7xl mx-auto px-4 lg:px-12 text-center space-y-4">
+        
+        <div class="inline-flex items-center gap-2 bg-gojek-green/10 text-gojek-darkGreen px-3.5 py-1 rounded-full text-xs font-bold uppercase tracking-wider">
+          Paket Layanan KOSCOUT.ID
+        </div>
+
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-[#101820] tracking-tight">
+          Solusi Terpadu Kebutuhan Riil Mahasiswa Undip & Orang Tua
+        </h2>
+        <p class="text-gray-500 text-base max-w-2xl mx-auto">
+          Mulai dari cek debit air, stabilitas voltase listrik, tur interaktif video call bersama orang tua, hingga pengamanan DP kamar anti-scam.
+        </p>
+
+        <!-- 3 Big Service Pillar Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 pt-10 text-left">
+          
+          <!-- Pillar 1: Layanan Lapangan (Single & Triple Scout) -->
+          <div class="rounded-3xl border border-gray-200 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col bg-white group">
+            <div class="h-44 bg-gradient-to-br from-emerald-600 to-gojek-darkGreen p-6 text-white flex flex-col justify-between relative overflow-hidden">
+              <div class="w-12 h-12 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center text-2xl">
+                🛵
+              </div>
+              <div class="relative z-10">
+                <span class="text-xs font-mono font-bold uppercase tracking-widest text-emerald-200">Pilar 01 • On-Demand Inspection</span>
+                <h3 class="text-2xl font-black">Single & Triple Scout</h3>
+              </div>
+              <div class="absolute -right-8 -bottom-8 w-32 h-32 rounded-full bg-white/10 blur-xl"></div>
+            </div>
+            <div class="p-6 flex-1 flex flex-col justify-between space-y-4">
+              <p class="text-sm text-gray-600 leading-relaxed">
+                Mitra Scout mahasiswa Undip terverifikasi (KTM + KTP) datang langsung ke kos sasaran di area Tembalang. Melakukan audit mikro: debit kran air, voltase stopkontak kasur, speedtest WiFi & sinyal 4G/5G, serta cek kebersihan kloset.
+              </p>
+              <div class="space-y-2 pt-2 border-t border-gray-100 text-xs font-medium text-gray-700">
+                <div class="flex items-center gap-2"><span class="text-gojek-green font-bold">✓</span> <span>Single Scout (Rp 39rb) & Triple Bundle (Rp 99rb)</span></div>
+                <div class="flex items-center gap-2"><span class="text-gojek-green font-bold">✓</span> <span>Standar 25 Poin SOP Audit Fisik Objektif</span></div>
+                <div class="flex items-center gap-2"><span class="text-gojek-green font-bold">✓</span> <span>Geotag, Timestamp & Foto Asli Anti-Manipulasi</span></div>
+              </div>
+              <button onclick="selectOrderPackage('triple'); switchMainView('simulator'); goToSimScreen(2);" class="btn-asphalt w-full bg-gojek-green hover:bg-gojek-darkGreen text-white text-xs py-2.5 flex items-center justify-center gap-1.5 mt-2">
+                <span>Pesan Jasa Survei</span>
+                <span>&rarr;</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Pillar 2: Live Tour & Escrow Shield -->
+          <div class="rounded-3xl border border-gray-200 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col bg-white group">
+            <div class="h-44 bg-gradient-to-br from-blue-600 to-cyan-700 p-6 text-white flex flex-col justify-between relative overflow-hidden">
+              <div class="w-12 h-12 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center text-2xl">
+                🛡️
+              </div>
+              <div class="relative z-10">
+                <span class="text-xs font-mono font-bold uppercase tracking-widest text-cyan-200">Pilar 02 • Trust & Protection</span>
+                <h3 class="text-2xl font-black">Live Tour & Escrow Shield</h3>
+              </div>
+              <div class="absolute -right-8 -bottom-8 w-32 h-32 rounded-full bg-white/10 blur-xl"></div>
+            </div>
+            <div class="p-6 flex-1 flex flex-col justify-between space-y-4">
+              <p class="text-sm text-gray-600 leading-relaxed">
+                Video call walkthrough interaktif menghubungkan Anda dan orang tua di rumah langsung dengan Scout di kamar kos dan tatap muka bersama Ibu Kost. Uang muka (DP) dilindungi 100% oleh rekening bersama hingga kunci fisik diserahterimakan.
+              </p>
+              <div class="space-y-2 pt-2 border-t border-gray-100 text-xs font-medium text-gray-700">
+                <div class="flex items-center gap-2"><span class="text-gojek-blue font-bold">✓</span> <span>Live Video Walkthrough 2 Arah Bersama Ortu</span></div>
+                <div class="flex items-center gap-2"><span class="text-gojek-blue font-bold">✓</span> <span>Garansi 100% DP Kembali jika Zonk / Batal</span></div>
+                <div class="flex items-center gap-2"><span class="text-gojek-blue font-bold">✓</span> <span>Surat Perjanjian Sewa Digital Sah & Mengikat</span></div>
+              </div>
+              <button onclick="toggleVideoCallModal(true)" class="btn-asphalt w-full bg-gojek-blue hover:bg-blue-700 text-white text-xs py-2.5 flex items-center justify-center gap-1.5 mt-2">
+                <span>Coba Live Video Tour</span>
+                <span>&rarr;</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Pillar 3: Fast-Track & Pindahan (VIP Mandiri Rush & ScoutMover) -->
+          <div class="rounded-3xl border border-gray-200 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col bg-white group">
+            <div class="h-44 bg-gradient-to-br from-amber-500 to-orange-600 p-6 text-white flex flex-col justify-between relative overflow-hidden">
+              <div class="w-12 h-12 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center text-2xl">
+                ⚡
+              </div>
+              <div class="relative z-10">
+                <span class="text-xs font-mono font-bold uppercase tracking-widest text-amber-100">Pilar 03 • Fast-Track & Moving</span>
+                <h3 class="text-2xl font-black">VIP Mandiri Rush & Mover</h3>
+              </div>
+              <div class="absolute -right-8 -bottom-8 w-32 h-32 rounded-full bg-white/10 blur-xl"></div>
+            </div>
+            <div class="p-6 flex-1 flex flex-col justify-between space-y-4">
+              <p class="text-sm text-gray-600 leading-relaxed">
+                Khusus maba kloter Mandiri dengan batas waktu mepet pasca pengumuman. Same-day SLA (&lt;12 jam) mensurvei hingga 5 kos pilihan, pendampingan negosiasi sewa tahunan, plus jasa ScoutMover angkut barang dari Stasiun Semarang ke kos baru.
+              </p>
+              <div class="space-y-2 pt-2 border-t border-gray-100 text-xs font-medium text-gray-700">
+                <div class="flex items-center gap-2"><span class="text-orange-600 font-bold">✓</span> <span>VIP Mandiri Rush (Rp 229rb) Same-Day &lt;12 Jam</span></div>
+                <div class="flex items-center gap-2"><span class="text-orange-600 font-bold">✓</span> <span>ScoutMover: Bantuan Angkut Barang dari Stasiun</span></div>
+                <div class="flex items-center gap-2"><span class="text-orange-600 font-bold">✓</span> <span>Free Tembalang Living Guidebook & Tips Kating</span></div>
+              </div>
+              <button onclick="selectOrderPackage('vip'); switchMainView('simulator'); goToSimScreen(2);" class="btn-asphalt w-full bg-orange-600 hover:bg-orange-700 text-white text-xs py-2.5 flex items-center justify-center gap-1.5 mt-2">
+                <span>Pilih VIP Mandiri Rush</span>
+                <span>&rarr;</span>
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- SECTION 3: SCALE, TRUST & METRICS -->
+    <section id="skala" class="py-16 bg-[#FAFAFA] border-y border-gray-200">
+      <div class="max-w-7xl mx-auto px-4 lg:px-12">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+          <div class="bg-white p-6 rounded-2xl border border-gray-200 shadow-xs space-y-1">
+            <div class="text-3xl lg:text-4xl font-black text-gojek-darkGreen">1.850+</div>
+            <div class="text-xs font-bold text-gray-800">Database Kost Tembalang</div>
+            <p class="text-[11px] text-gray-500">Banjarsari, Sirojudin, Bulusan, Tirto Agung</p>
+          </div>
+          <div class="bg-white p-6 rounded-2xl border border-gray-200 shadow-xs space-y-1">
+            <div class="text-3xl lg:text-4xl font-black text-gojek-darkGreen">42 Menit</div>
+            <div class="text-xs font-bold text-gray-800">Rata-rata Respon Lapangan</div>
+            <p class="text-[11px] text-gray-500">Scout standby dalam radius kampus Undip</p>
+          </div>
+          <div class="bg-white p-6 rounded-2xl border border-gray-200 shadow-xs space-y-1">
+            <div class="text-3xl lg:text-4xl font-black text-gojek-darkGreen">100%</div>
+            <div class="text-xs font-bold text-gray-800">Garansi Refund DP Escrow</div>
+            <p class="text-[11px] text-gray-500">Bebas risiko penipuan kuitansi fiktif</p>
+          </div>
+          <div class="bg-white p-6 rounded-2xl border border-gray-200 shadow-xs space-y-1">
+            <div class="text-3xl lg:text-4xl font-black text-gojek-darkGreen">Rp 850rb</div>
+            <div class="text-xs font-bold text-gray-800">Penghematan Biaya Ortu</div>
+            <p class="text-[11px] text-gray-500">Hemat tiket pesawat/kereta & hotel survei</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 4: INTERACTIVE PRICING CALCULATOR (MATCHING KOSCOUT REAL BMC PACKAGES) -->
+    <section id="kalkulator" class="py-20 bg-white">
+      <div class="max-w-7xl mx-auto px-4 lg:px-12">
+        
+        <div class="bg-[#101820] text-white rounded-3xl p-8 lg:p-12 shadow-2xl relative overflow-hidden">
+          <div class="absolute -right-20 -bottom-20 w-80 h-80 bg-gojek-green/20 rounded-full blur-3xl pointer-events-none"></div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative z-10">
+            
+            <div class="lg:col-span-6 space-y-4 text-left">
+              <div class="inline-block bg-gojek-green/20 text-emerald-400 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
+                Transparansi Biaya Layanan
+              </div>
+              <h3 class="text-3xl font-extrabold tracking-tight">
+                Kalkulator Tarif Survei & Proteksi Kost Tembalang
+              </h3>
+              <p class="text-gray-300 text-sm leading-relaxed">
+                Biaya transparan tanpa komisi tersembunyi. Dihitung berdasarkan paket survei, zona jarak kampus Undip, serta opsi proteksi rekening bersama Escrow DP.
+              </p>
+              <div class="space-y-2 text-xs text-gray-400 pt-2">
+                <div class="flex items-center gap-2">
+                  <span class="w-4 h-4 rounded-full bg-gojek-green text-white flex items-center justify-center font-bold text-[10px]">✓</span>
+                  <span>Sudah termasuk bensin mitra scout mahasiswa & dokumentasi video HD</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <span class="w-4 h-4 rounded-full bg-gojek-green text-white flex items-center justify-center font-bold text-[10px]">✓</span>
+                  <span>Uji debit air & tes voltase stopkontak gratis dalam seluruh paket</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <span class="w-4 h-4 rounded-full bg-gojek-green text-white flex items-center justify-center font-bold text-[10px]">✓</span>
+                  <span>Garansi re-survei gratis bila hasil audit tidak akurat</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Interactive Calculator Box -->
+            <div class="lg:col-span-6 bg-white text-[#101820] rounded-3xl p-6 shadow-xl space-y-4">
+              <h4 class="font-extrabold text-base flex items-center justify-between">
+                <span>Kalkulator Tarif Scouting</span>
+                <span class="text-xs font-normal text-gray-500">Radius Tembalang Undip</span>
+              </h4>
+
+              <!-- Service Type Select -->
+              <div class="space-y-1.5">
+                <label class="text-xs font-bold text-gray-700">Pilih Paket Layanan:</label>
+                <select id="calc-service" onchange="calculateTariff()" class="w-full bg-gray-50 border border-gray-300 rounded-xl px-3.5 py-2.5 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-gojek-green">
+                  <option value="39000">Single Scout (Cek 1 Titik Kos Spesifik) — Rp 39.000</option>
+                  <option value="99000" selected>Triple Scout Bundle (3 Kos Komparasi • Terpopuler) — Rp 99.000</option>
+                  <option value="229000">VIP Mandiri Rush (s/d 5 Kos + Live Call + Escrow Gratis) — Rp 229.000</option>
+                </select>
+              </div>
+
+              <!-- Location Select -->
+              <div class="space-y-1.5">
+                <label class="text-xs font-bold text-gray-700">Lokasi / Area Kost Tujuan:</label>
+                <select id="calc-area" onchange="calculateTariff()" class="w-full bg-gray-50 border border-gray-300 rounded-xl px-3.5 py-2.5 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-gojek-green">
+                  <option value="0">Ring 1 Kampus Undip (Banjarsari, Sirojudin, Tirto Agung) — +Rp 0</option>
+                  <option value="5000">Ring 2 Tembalang (Bulusan, Gondang, Kramas) — +Rp 5.000</option>
+                  <option value="10000">Ring 3 Banyumanik / Pleburan — +Rp 10.000</option>
+                </select>
+              </div>
+
+              <!-- Additional Addons (Dynamic Calculation) -->
+              <div class="pt-2 space-y-2 border-t border-gray-100">
+                <div class="text-[11px] font-bold text-gray-700 uppercase tracking-wider">Opsi Tambahan Layanan:</div>
+                
+                <label class="flex items-center justify-between p-2 bg-gray-50 hover:bg-gray-100 rounded-xl border border-gray-200 cursor-pointer text-xs transition-colors">
+                  <div class="flex items-center gap-2">
+                    <input type="checkbox" id="calc-escrow" onchange="calculateTariff()" class="accent-gojek-green w-4 h-4 rounded">
+                    <div>
+                      <span class="font-bold text-gray-800">Proteksi Rekber Escrow DP Kos</span>
+                      <p class="text-[10px] text-gray-500">Jaminan anti-scam kuitansi palsu (Gratis di paket VIP Mandiri Rush)</p>
+                    </div>
+                  </div>
+                  <span class="font-bold text-xs text-gojek-darkGreen">+Rp 50.000</span>
+                </label>
+
+                <label class="flex items-center justify-between p-2 bg-gray-50 hover:bg-gray-100 rounded-xl border border-gray-200 cursor-pointer text-xs transition-colors">
+                  <div class="flex items-center gap-2">
+                    <input type="checkbox" id="calc-mover" onchange="calculateTariff()" class="accent-gojek-green w-4 h-4 rounded">
+                    <div>
+                      <span class="font-bold text-gray-800">ScoutMover: Jemput Barang dari Stasiun</span>
+                      <p class="text-[10px] text-gray-500">Angkut koper/kardus dari Stasiun Tawang/Poncol ke kamar kos</p>
+                    </div>
+                  </div>
+                  <span class="font-bold text-xs text-orange-600">+Rp 45.000</span>
+                </label>
+
+                <label class="flex items-center justify-between p-2 bg-gray-50 hover:bg-gray-100 rounded-xl border border-gray-200 cursor-pointer text-xs transition-colors">
+                  <div class="flex items-center gap-2">
+                    <input type="checkbox" id="calc-tour" onchange="calculateTariff()" class="accent-gojek-green w-4 h-4 rounded">
+                    <div>
+                      <span class="font-bold text-gray-800">Tambahan Sesi Live Video Tour (+15 Mnt)</span>
+                      <p class="text-[10px] text-gray-500">Sesi interaktif tanya jawab mendalam dengan pemilik kost</p>
+                    </div>
+                  </div>
+                  <span class="font-bold text-xs text-purple-700">+Rp 15.000</span>
+                </label>
+              </div>
+
+              <!-- Total Price Output -->
+              <div class="bg-gray-50 border border-gray-200 rounded-2xl p-4 flex items-center justify-between">
+                <div>
+                  <div class="text-[11px] text-gray-500 font-medium">Perkiraan Total Biaya:</div>
+                  <div id="calc-total" class="text-2xl font-black text-gojek-darkGreen">Rp 99.000</div>
+                  <div id="calc-breakdown" class="text-[10px] text-gray-500 font-mono mt-0.5">Paket: Triple Scout Bundle • Ring 1 (Rp 0) • Tanpa Add-on</div>
+                </div>
+                <button onclick="orderFromCalculator()" class="btn-asphalt bg-gojek-green hover:bg-gojek-darkGreen text-white text-xs px-4 py-2.5 shadow-md shadow-gojek-green/20">
+                  Lanjut Pesan &rarr;
+                </button>
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- SECTION 5: MITRA SCOUT RECRUITMENT -->
+    <section id="mitra" class="py-20 bg-[#FAFAFA] border-b border-gray-200">
+      <div class="max-w-7xl mx-auto px-4 lg:px-12 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+        
+        <div class="lg:col-span-6 space-y-4 text-left">
+          <div class="inline-block bg-gojek-green/10 text-gojek-darkGreen text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
+            Kemitraan Mahasiswa Undip
+          </div>
+          <h3 class="text-3xl font-extrabold text-[#101820] tracking-tight">
+            Dapatkan Penghasilan Fleksibel Sambil Kuliah di Undip
+          </h3>
+          <p class="text-gray-600 text-sm leading-relaxed">
+            Bergabunglah dengan ratusan mahasiswa aktif Undip yang menjadi Mitra Scout KOSCOUT. Bantu adik tingkat menemukan hunian aman, atur jadwal survei sendiri di sela jam kuliah, dan nikmati sistem bagi hasil transparan <strong>60% - 70%</strong> dari setiap pesanan.
+          </p>
+          <div class="grid grid-cols-2 gap-3 pt-2 text-xs font-semibold text-gray-700">
+            <div class="flex items-center gap-2"><span>🛵</span> <span>Cukup Punya Motor & HP</span></div>
+            <div class="flex items-center gap-2"><span>🎓</span> <span>Wajib Mahasiswa Aktif Undip</span></div>
+            <div class="flex items-center gap-2"><span>💸</span> <span>Pencairan Komisi Instan via GoPay</span></div>
+            <div class="flex items-center gap-2"><span>⭐</span> <span>Bonus Rating Bintang 5</span></div>
+          </div>
+          <div class="pt-3">
+            <button onclick="toggleMitraModal(true)" class="btn-asphalt bg-[#101820] hover:bg-gray-800 text-white text-xs px-6 py-3 shadow-lg">
+              Daftar Jadi Mitra Scout &rarr;
+            </button>
+          </div>
+        </div>
+
+        <div class="lg:col-span-6 bg-white p-6 rounded-3xl border border-gray-200 shadow-md space-y-4">
+          <div class="flex items-center gap-3">
+            <div class="w-12 h-12 rounded-2xl bg-gojek-green/20 text-gojek-darkGreen flex items-center justify-center font-black text-xl">
+              DP
+            </div>
+            <div>
+              <div class="font-extrabold text-sm text-[#101820]">Dimas Prayoga (Teknik Undip '22)</div>
+              <div class="text-xs text-gray-500 font-mono">Mitra Scout Platinum • 184 Pesanan Selesai</div>
+            </div>
+            <div class="ml-auto bg-amber-50 text-amber-800 border border-amber-200 text-xs font-extrabold px-2.5 py-1 rounded-full flex items-center gap-1">
+              <span>★</span> <span>4.97</span>
+            </div>
+          </div>
+          <blockquote class="text-xs text-gray-600 italic bg-gray-50 p-4 rounded-2xl border border-gray-100">
+            "Sangat fleksibel! Sambil nunggu kelas sore di FT, saya bisa ambil 2 order cek kos di Sirojudin dan Banjarsari. Sebulan bisa dapat Rp 2,5 - 3,5 juta bersih, cukup banget buat bayar uang makan dan beli buku kuliah."
+          </blockquote>
+          <div class="flex items-center justify-between text-xs text-gray-500 pt-1">
+            <span>Audit 25 Poin SOP Certified</span>
+            <span class="font-bold text-gojek-green">Akun Terverifikasi BEM Undip</span>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- SECTION 6: TESTIMONIALS -->
+    <section id="testimoni" class="py-20 bg-white">
+      <div class="max-w-7xl mx-auto px-4 lg:px-12 text-center space-y-4">
+        
+        <div class="inline-block bg-gojek-green/10 text-gojek-darkGreen text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
+          Cerita Mahasiswa & Orang Tua
+        </div>
+
+        <h2 class="text-3xl font-extrabold text-[#101820]">
+          Dipercaya Lebih dari 1.800+ Mahasiswa Rantau Undip
+        </h2>
+        <p class="text-gray-500 text-sm max-w-xl mx-auto">
+          Pengalaman nyata calon mahasiswa dan orang tua yang terhindar dari kos zonk dan penipuan kuitansi uang muka.
+        </p>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-8 text-left">
+          
+          <div class="bg-gray-50 p-6 rounded-3xl border border-gray-200 space-y-3">
+            <div class="flex items-center gap-1 text-amber-500 text-sm">★★★★★</div>
+            <p class="text-xs text-gray-700 leading-relaxed">
+              "Lolos jalur Mandiri Undip dari Medan, cuma punya waktu 10 hari sebelum orientasi. Untung ada paket VIP Mandiri Rush KOSCOUT. Dalam 8 jam scout kirim hasil audit 4 kos dan live video call bareng mama. Sangat membantu!"
+            </p>
+            <div class="pt-2 border-t border-gray-200 flex items-center gap-3">
+              <div class="w-8 h-8 rounded-full bg-emerald-200 text-emerald-800 flex items-center justify-center font-bold text-xs">NK</div>
+              <div>
+                <div class="font-bold text-xs text-[#101820]">Nabila Khairunnisa</div>
+                <div class="text-[10px] text-gray-500">Maba FEB Undip 2024 (Asal Medan)</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-gray-50 p-6 rounded-3xl border border-gray-200 space-y-3">
+            <div class="flex items-center gap-1 text-amber-500 text-sm">★★★★★</div>
+            <p class="text-xs text-gray-700 leading-relaxed">
+              "Hampir ketipu DP Rp 1,5 juta di Facebook untuk kost fiktif di Jl. Sirojudin. Untung pesan Single Scout dulu, ternyata alamatnya ruko kosong! KOSCOUT beneran penyelamat dompet anak rantau."
+            </p>
+            <div class="pt-2 border-t border-gray-200 flex items-center gap-3">
+              <div class="w-8 h-8 rounded-full bg-blue-200 text-blue-800 flex items-center justify-center font-bold text-xs">RF</div>
+              <div>
+                <div class="font-bold text-xs text-[#101820]">Rifqi Fadhillah</div>
+                <div class="text-[10px] text-gray-500">Mahasiswa FSM Undip (Asal Bandung)</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-gray-50 p-6 rounded-3xl border border-gray-200 space-y-3">
+            <div class="flex items-center gap-1 text-amber-500 text-sm">★★★★★</div>
+            <p class="text-xs text-gray-700 leading-relaxed">
+              "Sebagai orang tua yang tinggal di Surabaya, saya sangat khawatir anak perempuan saya dapat kos yang airnya kotor atau rawan maling. Video call live bersama scout dan fitur Escrow DP bikin hati tenang 100%."
+            </p>
+            <div class="pt-2 border-t border-gray-200 flex items-center gap-3">
+              <div class="w-8 h-8 rounded-full bg-purple-200 text-purple-800 flex items-center justify-center font-bold text-xs">IW</div>
+              <div>
+                <div class="font-bold text-xs text-[#101820]">Ibu Retno W.</div>
+                <div class="text-[10px] text-gray-500">Orang Tua Mahasiswi Kedokteran Undip</div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="bg-[#101820] text-white py-12 border-t border-gray-800 mt-auto">
+      <div class="max-w-7xl mx-auto px-4 lg:px-12 space-y-8">
+        
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+          
+          <div class="space-y-3 md:col-span-1">
+            <div class="flex items-center gap-2">
+              <div class="w-8 h-8 solv-mark text-gojek-green"></div>
+              <span class="text-2xl font-black tracking-tight text-white">KOSCOUT<span class="text-gojek-green">.ID</span></span>
+            </div>
+            <p class="text-xs text-gray-400 max-w-sm leading-relaxed">
+              Platform on-demand scouting kost mahasiswa pertama di Indonesia. Mengadopsi Gojek Design System untuk inspeksi fisik 25 poin dan perlindungan DP bergaransi.
+            </p>
+            <div class="flex items-center gap-3 pt-2">
+              <span class="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center text-xs text-gray-300">IG</span>
+              <span class="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center text-xs text-gray-300">TT</span>
+              <span class="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center text-xs text-gray-300">YT</span>
+              <span class="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center text-xs text-gray-300">TG</span>
+            </div>
+          </div>
+
+          <div class="space-y-3">
+            <h5 class="text-xs font-bold uppercase tracking-wider text-gray-300">Layanan KOSCOUT</h5>
+            <ul class="space-y-2 text-xs text-gray-400">
+              <li><a href="javascript:void(0)" onclick="selectOrderPackage('single'); switchMainView('simulator'); goToSimScreen(2);" class="hover:text-white">Single Scout (Cek 1 Kos)</a></li>
+              <li><a href="javascript:void(0)" onclick="selectOrderPackage('triple'); switchMainView('simulator'); goToSimScreen(2);" class="hover:text-white">Triple Scout Bundle (3 Kos)</a></li>
+              <li><a href="javascript:void(0)" onclick="selectOrderPackage('vip'); switchMainView('simulator'); goToSimScreen(2);" class="hover:text-white">VIP Mandiri Rush (<12 Jam)</a></li>
+              <li><a href="javascript:void(0)" onclick="toggleVideoCallModal(true)" class="hover:text-white">Live Walkthrough Video Call</a></li>
+              <li><a href="javascript:void(0)" onclick="switchMainView('simulator'); goToSimScreen(5);" class="hover:text-white">Escrow DP Anti-Fraud Shield</a></li>
+              <li><a href="javascript:void(0)" onclick="toggleProtocolModal(true)" class="hover:text-white">Standardized 25-Point SOP</a></li>
+            </ul>
+          </div>
+
+          <div class="space-y-3">
+            <h5 class="text-xs font-bold uppercase tracking-wider text-gray-300">Kemitraan</h5>
+            <ul class="space-y-2 text-xs text-gray-400">
+              <li><a href="#mitra" onclick="toggleMitraModal(true)" class="hover:text-white">Daftar Mitra Scout</a></li>
+              <li><a href="javascript:void(0)" onclick="toggleMitraModal(true)" class="hover:text-white">Mitra Pemilik Kost</a></li>
+              <li><a href="javascript:void(0)" class="hover:text-white">Kerjasama BEM & Ormawa Undip</a></li>
+              <li><a href="javascript:void(0)" class="hover:text-white">Program Afiliasi Maba</a></li>
+            </ul>
+          </div>
+
+          <div class="space-y-3">
+            <h5 class="text-xs font-bold uppercase tracking-wider text-gray-300">Bantuan & Legal</h5>
+            <ul class="space-y-2 text-xs text-gray-400">
+              <li><a href="javascript:void(0)" onclick="toggleProtocolModal(true)" class="hover:text-white">SOP 25 Poin Audit</a></li>
+              <li><a href="javascript:void(0)" class="hover:text-white">Ketentuan Escrow Refund</a></li>
+              <li><a href="javascript:void(0)" onclick="openTanyaKatingModal()" class="hover:text-white">Tanya Kating Undip</a></li>
+              <li><a href="javascript:void(0)" onclick="openScoutChatModal()" class="hover:text-white">Chat Scout Lapangan</a></li>
+            </ul>
+          </div>
+
+        </div>
+
+        <div class="border-t border-gray-800 pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-gray-500 gap-4">
+          <p>© 2024 - 2026 KOSCOUT.ID. Replikasi Desain Berdasarkan Gojek Asphalt Design System.</p>
+          <div class="flex items-center gap-4">
+            <span class="text-emerald-400 font-mono font-bold">Hi-Fi Ver.01 Production Prototype</span>
+            <span>Tembalang, Semarang, Jawa Tengah</span>
+          </div>
+        </div>
+
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- VIEW 2: 5-SCREEN MOBILE CANVAS (SIDE-BY-SIDE ARTBOARDS) -->
+  <!-- ========================================================================= -->
+  <div id="view-canvas" class="w-full hidden p-4 lg:p-8 overflow-x-auto">
+    
+    <!-- Canvas Header Bar -->
+    <div class="max-w-7xl mx-auto mb-6 flex items-center justify-between">
+      <div>
+        <h2 class="text-xl font-extrabold text-[#101820]">
+          Mobile App User Flow Canvas (5 Core Screens)
+        </h2>
+        <p class="text-xs text-gray-500">
+          Replikasi desain Gojek Mobile App yang disesuaikan secara presisi dengan fitur KOSCOUT.ID.
+        </p>
+      </div>
+      <div class="flex items-center gap-3">
+        <span class="text-xs font-mono font-bold bg-gray-200 text-gray-700 px-3 py-1 rounded-full">
+          Gojek Asphalt System • 375 x 780 Viewport
+        </span>
+        <button onclick="switchMainView('simulator')" class="btn-asphalt bg-gojek-green hover:bg-gojek-darkGreen text-white text-xs px-4 py-2 flex items-center gap-1.5 shadow-sm">
+          <span>Buka Interactive Simulator</span>
+          <span>&rarr;</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- 5 Artboard Columns Side by Side -->
+    <div class="flex gap-8 pb-8 justify-start xl:justify-center items-start min-w-[1950px]">
+
+      <!-- ===================================================================== -->
+      <!-- SCREEN 1: SUPERAPP BERANDA (GOJEK STYLE HOME WITH KOSCOUT FEATURES) -->
+      <!-- ===================================================================== -->
+      <div class="flex flex-col items-center">
+        <div class="mb-3 flex items-center justify-between w-[375px] px-2">
+          <div class="flex items-center gap-2">
+            <span class="w-6 h-6 rounded-full bg-gojek-green text-white text-xs font-bold flex items-center justify-center">1</span>
+            <span class="text-sm font-bold text-[#101820]">Screen 01: Superapp Beranda</span>
+          </div>
+          <span class="text-[11px] font-mono text-gray-400">home_koscout.html</span>
+        </div>
+
+        <!-- Phone Mockup Container -->
+        <div class="w-[375px] h-[780px] bg-[#101820] rounded-[44px] p-3 phone-shadow relative overflow-hidden flex flex-col border-4 border-gray-800">
+          <!-- Dynamic Island / Top Notch -->
+          <div class="absolute top-4 left-1/2 -translate-x-1/2 w-28 h-5 bg-black rounded-full z-40"></div>
+
+          <!-- Phone Inner Screen -->
+          <div id="artboard-screen-1" class="w-full h-full bg-[#FAFAFA] rounded-[34px] overflow-hidden flex flex-col relative text-slate-800">
+            
+            <!-- iOS Status Bar -->
+            <div class="h-10 pt-2 px-6 flex items-center justify-between text-[11px] font-bold text-gray-800 shrink-0 select-none">
+              <span>09:41</span>
+              <div class="flex items-center gap-1.5">
+                <span>5G</span>
+                <div class="w-5 h-2.5 border border-gray-800 rounded-sm p-0.5">
+                  <div class="w-full h-full bg-gray-800 rounded-2xs"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Scrollable App Content -->
+            <div class="flex-1 overflow-y-auto no-scrollbar px-3.5 space-y-3 pb-20">
+              
+              <!-- Search Bar & Location Filter Chips -->
+              <div class="pt-1 space-y-2">
+                <div class="bg-white border border-gray-200 rounded-full px-3.5 py-2 flex items-center gap-2.5 shadow-xs focus-within:border-gojek-green focus-within:ring-2 focus-within:ring-gojek-green/20 transition-all">
+                  <svg class="w-4 h-4 text-gray-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                  <input type="text" oninput="handleKostSearch(this.value)" placeholder="Cari kost: Sirojudin, Banjarsari, AC..." class="kost-search-input w-full bg-transparent text-xs text-gray-700 placeholder-gray-400 focus:outline-none">
+                </div>
+
+                <!-- Chips Row -->
+                <div class="flex gap-1.5 overflow-x-auto no-scrollbar text-[10px] font-bold">
+                  <button data-cat="all" onclick="handleCategoryFilter('all')" class="chip-filter px-2.5 py-1 rounded-full bg-gojek-green text-white shadow-xs shrink-0">Semua</button>
+                  <button data-cat="sirojudin" onclick="handleCategoryFilter('sirojudin')" class="chip-filter px-2.5 py-1 rounded-full bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 shrink-0">Sirojudin</button>
+                  <button data-cat="banjarsari" onclick="handleCategoryFilter('banjarsari')" class="chip-filter px-2.5 py-1 rounded-full bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 shrink-0">Banjarsari</button>
+                  <button data-cat="ac" onclick="handleCategoryFilter('ac')" class="chip-filter px-2.5 py-1 rounded-full bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 shrink-0">AC</button>
+                  <button data-cat="putra" onclick="handleCategoryFilter('putra')" class="chip-filter px-2.5 py-1 rounded-full bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 shrink-0">Putra</button>
+                  <button data-cat="putri" onclick="handleCategoryFilter('putri')" class="chip-filter px-2.5 py-1 rounded-full bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 shrink-0">Putri</button>
+                </div>
+              </div>
+
+              <!-- KOSPAY x Escrow Shield Card (Asphalt Style Wallet Card) -->
+              <div class="bg-gradient-to-r from-[#0081A0] via-[#00AED6] to-[#00880D] text-white rounded-2xl p-3.5 shadow-sm space-y-3">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-1.5">
+                    <div class="w-4 h-4 solv-mark text-white"></div>
+                    <span class="font-extrabold text-xs tracking-tight">KOSPAY</span>
+                    <span class="text-[9px] bg-white/20 px-1.5 py-0.5 rounded-full font-bold">GoPay & QRIS</span>
+                  </div>
+                  <div class="text-right">
+                    <div class="text-[10px] text-cyan-100">Saldo Escrow & Dompet</div>
+                    <div class="font-mono font-black text-sm">Rp 485.000</div>
+                  </div>
+                </div>
+
+                <div class="grid grid-cols-4 gap-1 text-center pt-2 border-t border-white/20">
+                  <button onclick="switchMainView('simulator'); goToSimScreen(5);" class="flex flex-col items-center gap-1">
+                    <div class="w-8 h-8 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center text-sm font-bold shadow-xs">
+                      💳
+                    </div>
+                    <span class="text-[10px] font-bold">Bayar DP</span>
+                  </button>
+                  <button onclick="alert('Top Up Saldo KOSPAY / GoPay melalui Virtual Account Bank Mandiri / BCA Undip')" class="flex flex-col items-center gap-1">
+                    <div class="w-8 h-8 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center text-sm font-bold shadow-xs">
+                      ➕
+                    </div>
+                    <span class="text-[10px] font-bold">Top Up</span>
+                  </button>
+                  <button onclick="switchMainView('simulator'); goToSimScreen(5);" class="flex flex-col items-center gap-1">
+                    <div class="w-8 h-8 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center text-sm font-bold shadow-xs">
+                      🛡️
+                    </div>
+                    <span class="text-[10px] font-bold">Proteksi DP</span>
+                  </button>
+                  <button onclick="alert('Garansi Escrow KOSCOUT: 100% uang muka kembali bila kondisi fisik kamar tidak sesuai hasil audit 25 poin.')" class="flex flex-col items-center gap-1">
+                    <div class="w-8 h-8 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center text-sm font-bold shadow-xs">
+                      ✓
+                    </div>
+                    <span class="text-[10px] font-bold">Garansi 100%</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- 8-Grid Superapp Service Launcher (100% Authentic KOSCOUT Features) -->
+              <div class="bg-white rounded-2xl p-3.5 border border-gray-200 shadow-xs space-y-2">
+                <div class="text-[11px] font-extrabold text-gray-500 uppercase tracking-wider">Layanan KOSCOUT.ID</div>
+                <div class="grid grid-cols-4 gap-3 text-center">
+                  
+                  <!-- 1. Single Scout -->
+                  <button onclick="selectOrderPackage('single'); switchMainView('simulator'); goToSimScreen(2);" class="flex flex-col items-center gap-1 group">
+                    <div class="w-12 h-12 rounded-2xl bg-gojek-green text-white flex items-center justify-center text-xl shadow-md group-hover:scale-105 transition-transform">
+                      🛵
+                    </div>
+                    <span class="text-[11px] font-bold text-gray-800">Single Scout</span>
+                  </button>
+
+                  <!-- 2. Triple Bundle -->
+                  <button onclick="selectOrderPackage('triple'); switchMainView('simulator'); goToSimScreen(2);" class="flex flex-col items-center gap-1 group">
+                    <div class="w-12 h-12 rounded-2xl bg-gojek-blue text-white flex items-center justify-center text-xl shadow-md group-hover:scale-105 transition-transform">
+                      📋
+                    </div>
+                    <span class="text-[11px] font-bold text-gray-800">Triple Bundle</span>
+                  </button>
+
+                  <!-- 3. VIP Mandiri Rush -->
+                  <button onclick="selectOrderPackage('vip'); switchMainView('simulator'); goToSimScreen(2);" class="flex flex-col items-center gap-1 group">
+                    <div class="w-12 h-12 rounded-2xl bg-[#EE2737] text-white flex items-center justify-center text-xl shadow-md group-hover:scale-105 transition-transform">
+                      ⚡
+                    </div>
+                    <span class="text-[11px] font-bold text-gray-800">Mandiri Rush</span>
+                  </button>
+
+                  <!-- 4. Live Walkthrough -->
+                  <button onclick="toggleVideoCallModal(true)" class="flex flex-col items-center gap-1 group">
+                    <div class="w-12 h-12 rounded-2xl bg-[#93278F] text-white flex items-center justify-center text-xl shadow-md group-hover:scale-105 transition-transform">
+                      📹
+                    </div>
+                    <span class="text-[11px] font-bold text-gray-800">Live Tour</span>
+                  </button>
+
+                  <!-- 5. Escrow DP -->
+                  <button onclick="switchMainView('simulator'); goToSimScreen(5);" class="flex flex-col items-center gap-1 group">
+                    <div class="w-12 h-12 rounded-2xl bg-[#00880D] text-white flex items-center justify-center text-xl shadow-md group-hover:scale-105 transition-transform">
+                      🛡️
+                    </div>
+                    <span class="text-[11px] font-bold text-gray-800">Escrow DP</span>
+                  </button>
+
+                  <!-- 6. Audit 25 Poin -->
+                  <button onclick="toggleProtocolModal(true)" class="flex flex-col items-center gap-1 group">
+                    <div class="w-12 h-12 rounded-2xl bg-[#0284C7] text-white flex items-center justify-center text-xl shadow-md group-hover:scale-105 transition-transform">
+                      🔍
+                    </div>
+                    <span class="text-[11px] font-bold text-gray-800">Audit 25 Poin</span>
+                  </button>
+
+                  <!-- 7. Scout Mover -->
+                  <button onclick="openScoutMoverModal()" class="flex flex-col items-center gap-1 group">
+                    <div class="w-12 h-12 rounded-2xl bg-[#F97316] text-white flex items-center justify-center text-xl shadow-md group-hover:scale-105 transition-transform">
+                      📦
+                    </div>
+                    <span class="text-[11px] font-bold text-gray-800">Scout Mover</span>
+                  </button>
+
+                  <!-- 8. Tanya Kating -->
+                  <button onclick="openTanyaKatingModal()" class="flex flex-col items-center gap-1 group">
+                    <div class="w-12 h-12 rounded-2xl bg-[#059669] text-white flex items-center justify-center text-xl shadow-md group-hover:scale-105 transition-transform">
+                      💬
+                    </div>
+                    <span class="text-[11px] font-bold text-gray-800">Tanya Kating</span>
+                  </button>
+
+                </div>
+              </div>
+
+              <!-- Active Order Floating Card (Gojek Live Activity) -->
+              <div onclick="switchMainView('simulator'); goToSimScreen(3);" class="cursor-pointer bg-white border-2 border-emerald-400 rounded-2xl p-3 shadow-sm hover:border-gojek-green transition-all flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                  <div class="relative">
+                    <div class="w-10 h-10 rounded-xl bg-gojek-green text-white flex items-center justify-center text-lg">
+                      🛵
+                    </div>
+                    <span class="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full border-2 border-white animate-pulse"></span>
+                  </div>
+                  <div>
+                    <div class="text-[11px] font-bold text-gray-900">Scout Dimas OTW ke Kost</div>
+                    <div class="text-[10px] text-gray-500">Kost Wisma Permai Tembalang • ETA 6 mnt</div>
+                  </div>
+                </div>
+                <span class="btn-asphalt bg-emerald-50 text-emerald-800 font-bold text-[10px] px-2.5 py-1">Lacak &rarr;</span>
+              </div>
+
+              <!-- Promo Card Carousel -->
+              <div class="space-y-1.5">
+                <div class="flex items-center justify-between">
+                  <span class="text-xs font-bold text-gray-900">Promo Khusus Anak Undip</span>
+                  <span class="text-[10px] font-bold text-gojek-green">Lihat Semua</span>
+                </div>
+                <div class="bg-gradient-to-r from-[#101820] to-emerald-950 text-white rounded-2xl p-3.5 space-y-2 relative overflow-hidden">
+                  <div class="inline-block bg-gojek-green text-[9px] font-extrabold px-2 py-0.5 rounded-full uppercase">
+                    KOSMABA99
+                  </div>
+                  <h4 class="font-extrabold text-xs">Diskon 20% Paket Triple Scout Bundle</h4>
+                  <p class="text-[10px] text-gray-300">Survei komparasi 3 kos sekaligus lengkap dengan uji debit air & tes sinyal WiFi.</p>
+                </div>
+              </div>
+
+              <!-- Kost Recommendations Feed (Searchable & Filterable) -->
+              <div class="space-y-2 pt-1">
+                <div class="flex items-center justify-between">
+                  <span class="text-xs font-bold text-gray-900">Kost Lolos Verifikasi KOSCOUT</span>
+                  <span class="text-[10px] text-gray-500 font-mono">Radius 1.5 km Undip</span>
+                </div>
+
+                <div class="kost-feed-container space-y-2">
+                  <!-- Kost 1 -->
+                  <div class="kost-card-item bg-white rounded-2xl p-2.5 border border-gray-200 flex gap-3 items-center" data-search="kost putra wisma graha sirojudin ft undip ac km mandi dalam" data-category="putra sirojudin ac">
+                    <div class="w-16 h-16 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-center text-xl font-bold shrink-0">
+                      🏢
+                    </div>
+                    <div class="flex-1 min-w-0">
+                      <div class="flex items-center gap-1.5">
+                        <span class="text-[9px] bg-emerald-100 text-emerald-800 font-bold px-1.5 py-0.2 rounded">✓ Audit 96</span>
+                        <span class="text-[10px] text-gray-400">Jl. Sirojudin • Putra</span>
+                      </div>
+                      <div class="font-bold text-xs truncate">Kost Putra Wisma Graha</div>
+                      <div class="text-[11px] font-black text-gojek-darkGreen">Rp 1.100.000 <span class="text-[9px] font-normal text-gray-500">/bln</span></div>
+                    </div>
+                    <button onclick="orderSpecificKost('Kost Putra Wisma Graha', 'Jl. Sirojudin No. 14, Tembalang (350m dari FT Undip)', 'Kamar 08', 'Hj. Ratna Wulandari', 1100000)" class="btn-asphalt bg-gojek-green text-white text-[10px] px-2.5 py-1.5 shrink-0">
+                      Cek
+                    </button>
+                  </div>
+
+                  <!-- Kost 2 -->
+                  <div class="kost-card-item bg-white rounded-2xl p-2.5 border border-gray-200 flex gap-3 items-center" data-search="kost putri d'banjarsari feb water heater ac cctv" data-category="putri banjarsari ac">
+                    <div class="w-16 h-16 rounded-xl bg-purple-50 border border-purple-100 flex items-center justify-center text-xl font-bold shrink-0">
+                      🏡
+                    </div>
+                    <div class="flex-1 min-w-0">
+                      <div class="flex items-center gap-1.5">
+                        <span class="text-[9px] bg-purple-100 text-purple-800 font-bold px-1.5 py-0.2 rounded">✓ Audit 98</span>
+                        <span class="text-[10px] text-gray-400">Jl. Banjarsari • Putri</span>
+                      </div>
+                      <div class="font-bold text-xs truncate">Kost Putri D'Banjarsari</div>
+                      <div class="text-[11px] font-black text-gojek-darkGreen">Rp 1.250.000 <span class="text-[9px] font-normal text-gray-500">/bln</span></div>
+                    </div>
+                    <button onclick="orderSpecificKost('Kost Putri D'Banjarsari', 'Jl. Banjarsari Raya No. 22, Tembalang (500m dari FEB Undip)', 'Kamar 12B', 'Bpk. Hendro Susanto', 1250000)" class="btn-asphalt bg-gojek-green text-white text-[10px] px-2.5 py-1.5 shrink-0">
+                      Cek
+                    </button>
+                  </div>
+
+                  <!-- Kost 3 -->
+                  <div class="kost-card-item bg-white rounded-2xl p-2.5 border border-gray-200 flex gap-3 items-center" data-search="wisma eksklusif tirto agung gsg parkir mobil ac campur" data-category="ac tirtoagung">
+                    <div class="w-16 h-16 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center text-xl font-bold shrink-0">
+                      🏘️
+                    </div>
+                    <div class="flex-1 min-w-0">
+                      <div class="flex items-center gap-1.5">
+                        <span class="text-[9px] bg-blue-100 text-blue-800 font-bold px-1.5 py-0.2 rounded">✓ Audit 94</span>
+                        <span class="text-[10px] text-gray-400">Jl. Tirto Agung • Campur</span>
+                      </div>
+                      <div class="font-bold text-xs truncate">Wisma Eksklusif Tirto Agung</div>
+                      <div class="text-[11px] font-black text-gojek-darkGreen">Rp 1.600.000 <span class="text-[9px] font-normal text-gray-500">/bln</span></div>
+                    </div>
+                    <button onclick="orderSpecificKost('Wisma Eksklusif Tirto Agung', 'Jl. Tirto Agung No. 8, Tembalang (800m dari GSG Undip)', 'Kamar Deluxe 03', 'Ibu Maya Santoso', 1600000)" class="btn-asphalt bg-gojek-green text-white text-[10px] px-2.5 py-1.5 shrink-0">
+                      Cek
+                    </button>
+                  </div>
+
+                  <!-- Empty search state -->
+                  <div class="kost-empty-state hidden text-center py-6 bg-gray-50 rounded-2xl border border-gray-200 text-gray-500 space-y-1">
+                    <div class="text-2xl">🔍</div>
+                    <p class="text-xs font-bold text-gray-700">Kost tidak ditemukan di area ini</p>
+                    <p class="text-[10px] text-gray-400">Coba kata kunci: Sirojudin, Banjarsari, atau AC</p>
+                  </div>
+                </div>
+
+              </div>
+
+            </div>
+
+            <!-- Bottom Floating Navigation Bar (Gojek Bottom Nav) -->
+            <div class="absolute bottom-0 inset-x-0 bg-white/95 backdrop-blur-md border-t border-gray-200 py-2 px-4 flex items-center justify-around text-gray-400 text-[10px] font-bold z-30">
+              <button onclick="switchMainView('simulator'); goToSimScreen(1);" class="text-gojek-green flex flex-col items-center gap-0.5">
+                <div class="w-5 h-5 solv-mark text-gojek-green"></div>
+                <span>Beranda</span>
+              </button>
+              <button onclick="switchMainView('simulator'); goToSimScreen(3);" class="hover:text-gray-900 flex flex-col items-center gap-0.5">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
+                <span>Pesanan</span>
+              </button>
+              <button onclick="openTanyaKatingModal()" class="hover:text-gray-900 flex flex-col items-center gap-0.5">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
+                <span>Chat</span>
+              </button>
+              <button onclick="switchMainView('simulator'); goToSimScreen(5);" class="hover:text-gray-900 flex flex-col items-center gap-0.5">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                <span>Escrow DP</span>
+              </button>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================================================================== -->
+      <!-- SCREEN 2: ORDER & 25-POINT CRITERIA FORM (KOSCOUT BOOKING FLOW) -->
+      <!-- ===================================================================== -->
+      <div class="flex flex-col items-center">
+        <div class="mb-3 flex items-center justify-between w-[375px] px-2">
+          <div class="flex items-center gap-2">
+            <span class="w-6 h-6 rounded-full bg-gojek-green text-white text-xs font-bold flex items-center justify-center">2</span>
+            <span class="text-sm font-bold text-[#101820]">Screen 02: Pesan Jasa Scout</span>
+          </div>
+          <span class="text-[11px] font-mono text-gray-400">order_scout.html</span>
+        </div>
+
+        <div class="w-[375px] h-[780px] bg-[#101820] rounded-[44px] p-3 phone-shadow relative overflow-hidden flex flex-col border-4 border-gray-800">
+          <div class="absolute top-4 left-1/2 -translate-x-1/2 w-28 h-5 bg-black rounded-full z-40"></div>
+
+          <div id="artboard-screen-2" class="w-full h-full bg-[#FAFAFA] rounded-[34px] overflow-hidden flex flex-col relative text-slate-800">
+            <!-- Status bar -->
+            <div class="h-10 pt-2 px-6 flex items-center justify-between text-[11px] font-bold text-gray-800 shrink-0 select-none">
+              <span>09:42</span>
+              <div class="flex items-center gap-1.5"><span>5G</span><div class="w-5 h-2.5 border border-gray-800 rounded-sm p-0.5"><div class="w-full h-full bg-gray-800 rounded-2xs"></div></div></div>
+            </div>
+
+            <!-- Header -->
+            <div class="px-4 py-2 bg-white border-b border-gray-200 flex items-center gap-3">
+              <button onclick="switchMainView('simulator'); goToSimScreen(1);" class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 font-bold hover:bg-gray-200 transition-colors">
+                &larr;
+              </button>
+              <div>
+                <h3 class="font-black text-sm">Pesan Jasa Cek Kost</h3>
+                <p class="text-[10px] text-gray-500">KOSCOUT.ID • Tembalang Undip Area</p>
+              </div>
+            </div>
+
+            <!-- Scrollable form -->
+            <div class="flex-1 overflow-y-auto px-4 py-3 space-y-3.5 text-xs no-scrollbar">
+              
+              <!-- Location Input -->
+              <div class="bg-white p-3 rounded-2xl border border-gray-200 shadow-xs space-y-2">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-gojek-green"></span>
+                    <span class="font-bold text-gray-700">Target Lokasi Kost:</span>
+                  </div>
+                  <button onclick="switchMainView('simulator'); goToSimScreen(1);" class="text-[10px] font-bold text-gojek-green hover:underline">Ganti</button>
+                </div>
+                <div class="bg-gray-50 p-2.5 rounded-xl border border-gray-200">
+                  <div class="target-kost-title font-bold text-gray-900">Kost Wisma Tembalang Permai</div>
+                  <div class="target-kost-address text-[11px] text-gray-500">Jl. Banjarsari No. 42A, Tembalang (500m dari FT Undip)</div>
+                </div>
+              </div>
+
+              <!-- Package Selector (KOSCOUT BMC Pricing Tiers) -->
+              <div class="space-y-2">
+                <label class="font-extrabold text-gray-900">Pilih Paket Layanan:</label>
+                <div class="space-y-2">
+                  
+                  <!-- Triple Scout Bundle (Default & Most Popular) -->
+                  <div onclick="selectOrderPackage('triple')" class="pkg-card-triple bg-emerald-50/80 p-3 rounded-2xl border-2 border-gojek-green shadow-xs flex items-center justify-between cursor-pointer transition-all">
+                    <div class="space-y-0.5">
+                      <div class="flex items-center gap-1.5">
+                        <span class="font-bold text-xs text-[#101820]">Triple Scout Bundle</span>
+                        <span class="bg-emerald-100 text-emerald-800 text-[9px] font-bold px-1.5 py-0.2 rounded">Terfavorit</span>
+                      </div>
+                      <div class="text-[10px] text-gray-500">Survei 3 Kos Komparasi + SOP 25 Poin Lengkap</div>
+                    </div>
+                    <div class="text-right font-black text-sm text-gojek-darkGreen">Rp 99.000</div>
+                  </div>
+
+                  <!-- Single Scout -->
+                  <div onclick="selectOrderPackage('single')" class="pkg-card-single bg-white p-3 rounded-2xl border border-gray-200 shadow-xs flex items-center justify-between cursor-pointer opacity-75 hover:opacity-100 transition-all">
+                    <div class="space-y-0.5">
+                      <div class="flex items-center gap-1.5">
+                        <span class="font-bold text-xs text-[#101820]">Single Scout (Quick Check)</span>
+                      </div>
+                      <div class="text-[10px] text-gray-500">Cek 1 Titik Kos Spesifik + Validasi Ibu Kost (&lt;24 Jam)</div>
+                    </div>
+                    <div class="text-right font-black text-sm text-gray-700">Rp 39.000</div>
+                  </div>
+
+                  <!-- VIP Mandiri Rush -->
+                  <div onclick="selectOrderPackage('vip')" class="pkg-card-vip bg-white p-3 rounded-2xl border border-gray-200 shadow-xs flex items-center justify-between cursor-pointer opacity-75 hover:opacity-100 transition-all">
+                    <div class="space-y-0.5">
+                      <div class="flex items-center gap-1.5">
+                        <span class="font-bold text-xs text-[#101820]">VIP Mandiri Rush Concierge</span>
+                        <span class="bg-amber-100 text-amber-800 text-[9px] font-bold px-1.5 py-0.2 rounded">Fast-Track</span>
+                      </div>
+                      <div class="text-[10px] text-gray-500">Same-day &lt;12 Jam + s/d 5 Kos + Free Live Call + Free Escrow</div>
+                    </div>
+                    <div class="text-right font-black text-sm text-orange-600">Rp 229.000</div>
+                  </div>
+
+                </div>
+              </div>
+
+              <!-- Campus Zone Ring Selector -->
+              <div class="bg-white p-3 rounded-2xl border border-gray-200 shadow-xs space-y-1.5">
+                <label class="font-bold text-gray-800 block text-[11px]">Zona Jarak Kampus Undip:</label>
+                <select onchange="updateZone(this.value)" class="select-zone w-full bg-gray-50 border border-gray-300 rounded-xl p-2 text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-gojek-green">
+                  <option value="ring1">Ring 1: Dekat Kampus Undip (Banjarsari / Sirojudin / Tirto Agung) — Rp 0</option>
+                  <option value="ring2">Ring 2: Tembalang Luar (Bulusan / Gondang / Kramas) — +Rp 5.000</option>
+                  <option value="ring3">Ring 3: Banyumanik / Pleburan — +Rp 10.000</option>
+                </select>
+              </div>
+
+              <!-- Add-ons & Upsell Services Checklist -->
+              <div class="bg-white p-3.5 rounded-2xl border border-gray-200 shadow-xs space-y-2">
+                <div class="font-extrabold text-gray-900 text-[11px] uppercase tracking-wider">Layanan Ekstra (Add-ons):</div>
+                
+                <!-- Escrow Addon -->
+                <label class="flex items-center justify-between p-2 bg-gray-50 rounded-xl border border-gray-200 cursor-pointer hover:bg-gray-100 transition-colors">
+                  <div class="flex items-center gap-2">
+                    <input type="checkbox" onchange="toggleAddon('escrow', this.checked)" class="chk-addon-escrow accent-gojek-green w-4 h-4 rounded">
+                    <div>
+                      <div class="font-bold text-gray-800">Proteksi Rekber Escrow DP</div>
+                      <div class="text-[10px] text-gray-500">Anti-fraud DP kamar (Gratis di paket VIP)</div>
+                    </div>
+                  </div>
+                  <span class="addon-price-escrow font-bold text-xs text-gojek-darkGreen">+Rp 50.000</span>
+                </label>
+
+                <!-- ScoutMover Addon -->
+                <label class="flex items-center justify-between p-2 bg-gray-50 rounded-xl border border-gray-200 cursor-pointer hover:bg-gray-100 transition-colors">
+                  <div class="flex items-center gap-2">
+                    <input type="checkbox" onchange="toggleAddon('mover', this.checked)" class="chk-addon-mover accent-gojek-green w-4 h-4 rounded">
+                    <div>
+                      <div class="font-bold text-gray-800">ScoutMover: Jemput Koper Stasiun</div>
+                      <div class="text-[10px] text-gray-500">Antar barang dari Stasiun Tawang/Poncol</div>
+                    </div>
+                  </div>
+                  <span class="font-bold text-xs text-orange-600">+Rp 45.000</span>
+                </label>
+
+                <!-- Extra Live Video Tour -->
+                <label class="flex items-center justify-between p-2 bg-gray-50 rounded-xl border border-gray-200 cursor-pointer hover:bg-gray-100 transition-colors">
+                  <div class="flex items-center gap-2">
+                    <input type="checkbox" onchange="toggleAddon('tour', this.checked)" class="chk-addon-tour accent-gojek-green w-4 h-4 rounded">
+                    <div>
+                      <div class="font-bold text-gray-800">Extra Video Call Tour (+15 Mnt)</div>
+                      <div class="text-[10px] text-gray-500">Tanya jawab live bersama ortu (Gratis di VIP)</div>
+                    </div>
+                  </div>
+                  <span class="addon-price-tour font-bold text-xs text-purple-700">+Rp 15.000</span>
+                </label>
+              </div>
+
+              <!-- 25-Point SOP Criteria Checklist (Live Counter) -->
+              <div class="bg-white p-3.5 rounded-2xl border border-gray-200 shadow-xs space-y-2.5">
+                <div class="flex items-center justify-between">
+                  <span class="font-extrabold text-gray-900">Kriteria Fokus Audit (25 Poin SOP):</span>
+                  <span class="checklist-counter-display text-[10px] text-gojek-green font-bold bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">6 dari 6 dipilih</span>
+                </div>
+
+                <div class="grid grid-cols-2 gap-2 text-[11px]">
+                  <label class="flex items-center gap-2 p-2 bg-gray-50 rounded-xl border border-gray-100 font-medium cursor-pointer hover:bg-gray-100 transition-colors">
+                    <input type="checkbox" checked onchange="toggleCriteria(0, this.checked)" class="criteria-cb-0 accent-gojek-green rounded">
+                    <span>💧 Debit Air Mandi</span>
+                  </label>
+                  <label class="flex items-center gap-2 p-2 bg-gray-50 rounded-xl border border-gray-100 font-medium cursor-pointer hover:bg-gray-100 transition-colors">
+                    <input type="checkbox" checked onchange="toggleCriteria(1, this.checked)" class="criteria-cb-1 accent-gojek-green rounded">
+                    <span>⚡ Grounding Listrik</span>
+                  </label>
+                  <label class="flex items-center gap-2 p-2 bg-gray-50 rounded-xl border border-gray-100 font-medium cursor-pointer hover:bg-gray-100 transition-colors">
+                    <input type="checkbox" checked onchange="toggleCriteria(2, this.checked)" class="criteria-cb-2 accent-gojek-green rounded">
+                    <span>📶 Speedtest Wi-Fi</span>
+                  </label>
+                  <label class="flex items-center gap-2 p-2 bg-gray-50 rounded-xl border border-gray-100 font-medium cursor-pointer hover:bg-gray-100 transition-colors">
+                    <input type="checkbox" checked onchange="toggleCriteria(3, this.checked)" class="criteria-cb-3 accent-gojek-green rounded">
+                    <span>🪟 Ventilasi & Jamur</span>
+                  </label>
+                  <label class="flex items-center gap-2 p-2 bg-gray-50 rounded-xl border border-gray-100 font-medium cursor-pointer hover:bg-gray-100 transition-colors">
+                    <input type="checkbox" checked onchange="toggleCriteria(4, this.checked)" class="criteria-cb-4 accent-gojek-green rounded">
+                    <span>🔒 Gembok & Jam Malam</span>
+                  </label>
+                  <label class="flex items-center gap-2 p-2 bg-gray-50 rounded-xl border border-gray-100 font-medium cursor-pointer hover:bg-gray-100 transition-colors">
+                    <input type="checkbox" checked onchange="toggleCriteria(5, this.checked)" class="criteria-cb-5 accent-gojek-green rounded">
+                    <span>🚗 Parkir Mobil/Motor</span>
+                  </label>
+                </div>
+
+                <!-- Custom Request Note -->
+                <div class="pt-1">
+                  <label class="text-[10px] text-gray-500 font-bold block mb-1">Catatan Khusus untuk Mitra Scout:</label>
+                  <input type="text" value="Cek apakah air bau besi dan tolong tes stopkontak dekat kasur" class="w-full bg-gray-50 border border-gray-200 rounded-xl p-2 text-[11px] text-gray-800 focus:outline-none focus:ring-1 focus:ring-gojek-green">
+                </div>
+              </div>
+
+              <!-- Payment Method Selector -->
+              <div class="bg-white p-3 rounded-2xl border border-gray-200 shadow-xs flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <div class="w-7 h-7 solv-mark text-gojek-blue"></div>
+                  <div>
+                    <div class="font-bold text-xs">KOSPAY / GoPay</div>
+                    <div class="text-[10px] text-gray-500">Saldo: Rp 485.000 (Cukup)</div>
+                  </div>
+                </div>
+                <span class="text-xs font-bold text-gojek-green">Ubah</span>
+              </div>
+
+            </div>
+
+            <!-- Bottom CTA -->
+            <div class="p-4 bg-white border-t border-gray-200 space-y-2">
+              <div class="flex items-center justify-between text-xs">
+                <span class="text-gray-500 font-medium">Total Pembayaran:</span>
+                <span class="order-total-display text-base font-black text-gojek-darkGreen">Rp 99.000</span>
+              </div>
+              <button onclick="switchMainView('simulator'); goToSimScreen(3);" class="btn-asphalt w-full bg-gojek-green hover:bg-gojek-darkGreen text-white text-xs py-3 flex items-center justify-center gap-2 shadow-lg shadow-gojek-green/25">
+                <div class="w-4 h-4 solv-mark text-white"></div>
+                <span>Pesan Scout Sekarang &rarr;</span>
+              </button>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================================================================== -->
+      <!-- SCREEN 3: LIVE GPS RADAR & SCOUT TRACKING -->
+      <!-- ===================================================================== -->
+      <div class="flex flex-col items-center">
+        <div class="mb-3 flex items-center justify-between w-[375px] px-2">
+          <div class="flex items-center gap-2">
+            <span class="w-6 h-6 rounded-full bg-gojek-green text-white text-xs font-bold flex items-center justify-center">3</span>
+            <span class="text-sm font-bold text-[#101820]">Screen 03: Live Radar & Tracking</span>
+          </div>
+          <span class="text-[11px] font-mono text-gray-400">scout_radar.html</span>
+        </div>
+
+        <div class="w-[375px] h-[780px] bg-[#101820] rounded-[44px] p-3 phone-shadow relative overflow-hidden flex flex-col border-4 border-gray-800">
+          <div class="absolute top-4 left-1/2 -translate-x-1/2 w-28 h-5 bg-black rounded-full z-40"></div>
+
+          <div id="artboard-screen-3" class="w-full h-full bg-[#E5E9EC] rounded-[34px] overflow-hidden flex flex-col relative text-slate-800">
+            <!-- Status bar -->
+            <div class="h-10 pt-2 px-6 flex items-center justify-between text-[11px] font-bold text-gray-800 shrink-0 select-none z-30">
+              <span>09:48</span>
+              <div class="flex items-center gap-1.5"><span>5G</span><div class="w-5 h-2.5 border border-gray-800 rounded-sm p-0.5"><div class="w-full h-full bg-gray-800 rounded-2xs"></div></div></div>
+            </div>
+
+            <!-- Top Floating Header Pill -->
+            <div class="absolute top-12 inset-x-4 z-30 flex items-center justify-between">
+              <button onclick="switchMainView('simulator'); goToSimScreen(2);" class="w-9 h-9 rounded-full bg-white shadow-md flex items-center justify-center text-gray-700 font-bold hover:bg-gray-100 transition-colors">
+                &larr;
+              </button>
+              <div class="bg-white/95 backdrop-blur-md px-3.5 py-1.5 rounded-full shadow-md border border-gray-200 flex items-center gap-2">
+                <div class="w-2.5 h-2.5 rounded-full bg-gojek-green animate-ping"></div>
+                <span class="text-xs font-black text-gray-900 tracking-tight">KOSCOUT Live Dispatch</span>
+              </div>
+              <button onclick="openScoutChatModal()" class="w-9 h-9 rounded-full bg-white shadow-md flex items-center justify-center text-gray-700 font-bold hover:bg-gray-100 transition-colors">
+                💬
+              </button>
+            </div>
+
+            <!-- Interactive GPS Map Simulated Layer -->
+            <div class="flex-1 relative overflow-hidden map-grid bg-[#E6ECE8]">
+              
+              <!-- Road Vectors SVG Layer -->
+              <svg class="absolute inset-0 w-full h-full" xmlns="http://www.w3.org/2000/svg">
+                <!-- Tembalang Main Road (Jl. Banjarsari) -->
+                <path d="M 60 -20 L 140 150 L 240 260 L 320 400" fill="none" stroke="#FFFFFF" stroke-width="18" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M 60 -20 L 140 150 L 240 260 L 320 400" fill="none" stroke="#D1D5DB" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+                
+                <!-- Cross road (Jl. Sirojudin) -->
+                <path d="M -20 220 L 160 210 L 240 260 L 400 240" fill="none" stroke="#FFFFFF" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M -20 220 L 160 210 L 240 260 L 400 240" fill="none" stroke="#E5E7EB" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+
+                <!-- Active Dispatch Route Line (Gojek Emerald Track) -->
+                <path d="M 130 140 L 190 200 L 240 260" fill="none" stroke="#00AA13" stroke-width="5" stroke-dasharray="6,4" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+
+              <!-- Target Kost Marker Pin -->
+              <div class="absolute top-[260px] left-[240px] -translate-x-1/2 -translate-y-1/2 z-20 flex flex-col items-center">
+                <div class="w-10 h-10 rounded-full bg-[#101820] text-white flex items-center justify-center text-lg shadow-xl border-2 border-white">
+                  🏠
+                </div>
+                <div class="target-kost-title bg-[#101820] text-white text-[9px] font-bold px-2 py-0.5 rounded-full shadow-md mt-1 whitespace-nowrap">
+                  Kost Wisma Tembalang
+                </div>
+              </div>
+
+              <!-- Scout Radar Pulse Wave & Moving Marker -->
+              <div class="absolute top-[140px] left-[130px] -translate-x-1/2 -translate-y-1/2 z-20 flex flex-col items-center transition-all duration-1000">
+                <div class="relative flex items-center justify-center">
+                  <div class="absolute w-12 h-12 rounded-full bg-gojek-green/30 radar-pulse pointer-events-none"></div>
+                  <div class="w-10 h-10 rounded-full bg-gojek-green text-white flex items-center justify-center text-lg shadow-xl border-2 border-white z-10">
+                    🛵
+                  </div>
+                </div>
+                <div class="bg-gojek-green text-white text-[9px] font-extrabold px-2 py-0.5 rounded-full shadow-md mt-1 whitespace-nowrap">
+                  Scout Dimas (Undip '22)
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Bottom Sheet Driver Details & Status (Asphalt Bottom Sheet) -->
+            <div class="bg-white rounded-t-[32px] p-4 shadow-2xl border-t border-gray-200 z-30 space-y-3">
+              <div class="w-10 h-1 bg-gray-300 rounded-full mx-auto"></div>
+              
+              <!-- Status Header -->
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2.5">
+                  <div class="w-3 h-3 rounded-full bg-gojek-green animate-ping"></div>
+                  <div>
+                    <div class="font-extrabold text-[#101820]">Mitra Menuju Lokasi Kost</div>
+                    <div class="text-[10px] text-gray-500">Estimasi Tiba: 6 Menit (1.1 km)</div>
+                  </div>
+                </div>
+                <span class="text-xs font-mono font-bold bg-emerald-50 text-gojek-darkGreen px-2.5 py-1 rounded-full border border-emerald-200">
+                  OTW
+                </span>
+              </div>
+
+              <!-- Scout Profile Card -->
+              <div class="p-3 bg-gray-50 rounded-2xl border border-gray-200 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                  <div class="w-11 h-11 rounded-2xl bg-gojek-green/20 text-gojek-darkGreen flex items-center justify-center font-black text-sm">
+                    DP
+                  </div>
+                  <div>
+                    <div class="font-black text-xs text-[#101820] flex items-center gap-1">
+                      <span>Dimas Prayoga</span>
+                      <span class="text-[9px] bg-blue-100 text-blue-800 px-1.5 rounded font-mono font-bold">KTM Valid</span>
+                    </div>
+                    <div class="text-[10px] text-gray-500">Teknik Mesin Undip '22 • Honda Vario (H 4821 BP)</div>
+                    <div class="flex items-center gap-1 text-[10px] text-amber-600 font-bold mt-0.5">
+                      <span>★ 4.97</span>
+                      <span class="text-gray-400">• 184 survei</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Quick Action Buttons -->
+                <div class="flex items-center gap-2">
+                  <button onclick="openScoutChatModal()" class="w-9 h-9 rounded-full bg-white border border-gray-200 shadow-xs flex items-center justify-center text-sm hover:bg-gray-100 transition-colors" title="Chat Scout">
+                    💬
+                  </button>
+                  <button onclick="toggleVideoCallModal(true)" class="w-9 h-9 rounded-full bg-purple-50 text-purple-700 border border-purple-200 shadow-xs flex items-center justify-center text-sm hover:bg-purple-100 transition-colors" title="Video Call">
+                    📹
+                  </button>
+                </div>
+              </div>
+
+              <!-- Live Status Progress Pipeline -->
+              <div class="p-2.5 bg-gray-50 rounded-xl border border-gray-200 space-y-1 text-[10px]">
+                <div class="flex justify-between font-bold text-gray-700">
+                  <span>Tahapan:</span>
+                  <span class="text-gojek-green">2 dari 5 Langkah</span>
+                </div>
+                <div class="w-full bg-gray-200 h-1.5 rounded-full overflow-hidden">
+                  <div class="bg-gojek-green h-full w-[40%] rounded-full"></div>
+                </div>
+                <div class="text-[9px] text-gray-400">1. Ditugaskan → <strong class="text-gray-800">2. OTW Lokasi</strong> → 3. Audit 25 Poin → 4. Live Call → 5. Selesai</div>
+              </div>
+
+              <!-- Next Action Button -->
+              <button onclick="switchMainView('simulator'); goToSimScreen(4);" class="btn-asphalt w-full bg-[#101820] hover:bg-gray-800 text-white text-xs py-2.5 flex items-center justify-center gap-2">
+                <span>Lihat Hasil Audit Fisik &rarr;</span>
+              </button>
+
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================================================================== -->
+      <!-- SCREEN 4: DIGITAL INSPECTION REPORT (25-POINT AUDIT RESULTS) -->
+      <!-- ===================================================================== -->
+      <div class="flex flex-col items-center">
+        <div class="mb-3 flex items-center justify-between w-[375px] px-2">
+          <div class="flex items-center gap-2">
+            <span class="w-6 h-6 rounded-full bg-gojek-green text-white text-xs font-bold flex items-center justify-center">4</span>
+            <span class="text-sm font-bold text-[#101820]">Screen 04: Laporan Audit 25 Poin</span>
+          </div>
+          <span class="text-[11px] font-mono text-gray-400">audit_report.html</span>
+        </div>
+
+        <div class="w-[375px] h-[780px] bg-[#101820] rounded-[44px] p-3 phone-shadow relative overflow-hidden flex flex-col border-4 border-gray-800">
+          <div class="absolute top-4 left-1/2 -translate-x-1/2 w-28 h-5 bg-black rounded-full z-40"></div>
+
+          <div id="artboard-screen-4" class="w-full h-full bg-[#FAFAFA] rounded-[34px] overflow-hidden flex flex-col relative text-slate-800">
+            <!-- Status bar -->
+            <div class="h-10 pt-2 px-6 flex items-center justify-between text-[11px] font-bold text-gray-800 shrink-0 select-none">
+              <span>09:58</span>
+              <div class="flex items-center gap-1.5"><span>5G</span><div class="w-5 h-2.5 border border-gray-800 rounded-sm p-0.5"><div class="w-full h-full bg-gray-800 rounded-2xs"></div></div></div>
+            </div>
+
+            <!-- Header -->
+            <div class="px-4 py-2 bg-white border-b border-gray-200 flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <button onclick="switchMainView('simulator'); goToSimScreen(3);" class="w-7 h-7 rounded-full bg-gray-100 flex items-center justify-center text-xs font-bold hover:bg-gray-200 transition-colors">
+                  &larr;
+                </button>
+                <div>
+                  <h3 class="font-black text-xs">Hasil Audit Fisik 25 Poin</h3>
+                  <div class="text-[10px] text-gray-500">ID Laporan: KOS-2026-9912</div>
+                </div>
+              </div>
+              <span class="bg-emerald-100 text-emerald-800 text-[10px] font-extrabold px-2 py-0.5 rounded-full border border-emerald-300">
+                VERIFIED
+              </span>
+            </div>
+
+            <!-- Scrollable Report Cards -->
+            <div class="flex-1 overflow-y-auto px-4 py-3 space-y-3 text-xs no-scrollbar">
+              
+              <!-- Total Score Card -->
+              <div class="bg-gradient-to-r from-emerald-700 to-gojek-darkGreen text-white p-4 rounded-2xl shadow-sm space-y-2">
+                <div class="flex items-center justify-between">
+                  <span class="text-[11px] uppercase tracking-wider font-bold text-emerald-200">KOSCOUT AUDIT SCORE</span>
+                  <span class="text-[10px] bg-white/20 px-2 py-0.5 rounded-full font-mono">Sangat Layak</span>
+                </div>
+                <div class="flex items-baseline gap-2">
+                  <span class="text-4xl font-black">96</span>
+                  <span class="text-emerald-200 font-bold">/ 100 Poin</span>
+                </div>
+                <p class="text-[11px] text-emerald-100">
+                  Lolos 24 dari 25 standar inspeksi. Kost direkomendasikan dan memenuhi kriteria kenyamanan maba.
+                </p>
+              </div>
+
+              <!-- Physical Audit Verification Points -->
+              <div class="space-y-2">
+                <span class="font-extrabold text-gray-900 block">Bukti Pengukuran Alat Ukur Lapangan:</span>
+
+                <!-- 1. Air -->
+                <div class="bg-white p-3 rounded-2xl border border-gray-200 shadow-xs space-y-1">
+                  <div class="flex items-center justify-between">
+                    <span class="font-bold flex items-center gap-1.5 text-gray-900">
+                      <span>💧</span> <span>Uji Debit & Sanitasi Air</span>
+                    </span>
+                    <span class="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">✓ 9.2 L/min</span>
+                  </div>
+                  <p class="text-[10px] text-gray-500">Air sumur jernih tanpa endapan kuning, tekanan shower kencang, tidak berbau besi/kaporit.</p>
+                </div>
+
+                <!-- 2. Stopkontak -->
+                <div class="bg-white p-3 rounded-2xl border border-gray-200 shadow-xs space-y-1">
+                  <div class="flex items-center justify-between">
+                    <span class="font-bold flex items-center gap-1.5 text-gray-900">
+                      <span>⚡</span> <span>Stopkontak & Grounding</span>
+                    </span>
+                    <span class="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">✓ 228V Stabil</span>
+                  </div>
+                  <p class="text-[10px] text-gray-500">Grounding normal, colokan tidak kendor, aman untuk laptop dan charger tanpa risiko korsleting.</p>
+                </div>
+
+                <!-- 3. Wi-Fi & Sinyal -->
+                <div class="bg-white p-3 rounded-2xl border border-gray-200 shadow-xs space-y-1">
+                  <div class="flex items-center justify-between">
+                    <span class="font-bold flex items-center gap-1.5 text-gray-900">
+                      <span>📶</span> <span>Speedtest Wi-Fi & Sinyal HP</span>
+                    </span>
+                    <span class="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">✓ 54.2 Mbps</span>
+                  </div>
+                  <p class="text-[10px] text-gray-500">Ping 12ms ke server lokal. Sinyal seluler Telkomsel & Indosat 4 bar penuh di dalam kamar tidur.</p>
+                </div>
+
+                <!-- 4. Ventilasi & Sirkulasi -->
+                <div class="bg-white p-3 rounded-2xl border border-gray-200 shadow-xs space-y-1">
+                  <div class="flex items-center justify-between">
+                    <span class="font-bold flex items-center gap-1.5 text-gray-900">
+                      <span>🪟</span> <span>Sirkulasi & Kelembapan</span>
+                    </span>
+                    <span class="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">✓ Lolos</span>
+                  </div>
+                  <p class="text-[10px] text-gray-500">Jendela menghadap ruang terbuka luar, tidak ada bau apek atau bercak jamur dinding.</p>
+                </div>
+
+                <!-- 5. Keamanan & Jam Malam -->
+                <div class="bg-white p-3 rounded-2xl border border-gray-200 shadow-xs space-y-1">
+                  <div class="flex items-center justify-between">
+                    <span class="font-bold flex items-center gap-1.5 text-gray-900">
+                      <span>🔒</span> <span>Keamanan & Jam Malam</span>
+                    </span>
+                    <span class="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">✓ Bebas 24 Jam</span>
+                  </div>
+                  <p class="text-[10px] text-gray-500">Kunci gerbang dipegang masing-masing anak kos, CCTV 4 titik aktif, parkir motor beratap aman.</p>
+                </div>
+
+              </div>
+
+              <!-- Scout Statement & Landlord Encounter -->
+              <div class="bg-blue-50 border border-blue-200 p-3 rounded-2xl space-y-1.5">
+                <div class="font-bold text-blue-900 flex items-center gap-1">
+                  <span>📝</span> <span>Pernyataan Mitra Scout:</span>
+                </div>
+                <p class="text-[10px] text-blue-800 italic leading-relaxed">
+                  "Sudah bertemu langsung dengan Ibu Hj. Ratna (pemilik kost). Kamar nomor 08 siap huni, AC dingin, dan gembok gerbang 24 jam bebas."
+                </p>
+                <div class="text-[9px] text-blue-600 font-mono">Geotag: -7.05124, 110.43891 • 09:54 WIB</div>
+              </div>
+
+            </div>
+
+            <!-- Bottom Action: Proceed to Escrow -->
+            <div class="p-4 bg-white border-t border-gray-200 space-y-2">
+              <button onclick="switchMainView('simulator'); goToSimScreen(5);" class="btn-asphalt w-full bg-gojek-green hover:bg-gojek-darkGreen text-white text-xs py-3 flex items-center justify-center gap-2 shadow-lg shadow-gojek-green/25">
+                <span>Lanjut Amankan Kamar via Escrow DP &rarr;</span>
+              </button>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================================================================== -->
+      <!-- SCREEN 5: ESCROW DEAL SHIELD & CHECKOUT (DP ANTI-SCAM) -->
+      <!-- ===================================================================== -->
+      <div class="flex flex-col items-center">
+        <div class="mb-3 flex items-center justify-between w-[375px] px-2">
+          <div class="flex items-center gap-2">
+            <span class="w-6 h-6 rounded-full bg-gojek-green text-white text-xs font-bold flex items-center justify-center">5</span>
+            <span class="text-sm font-bold text-[#101820]">Screen 05: Escrow Deal Shield</span>
+          </div>
+          <span class="text-[11px] font-mono text-gray-400">escrow_deal.html</span>
+        </div>
+
+        <div class="w-[375px] h-[780px] bg-[#101820] rounded-[44px] p-3 phone-shadow relative overflow-hidden flex flex-col border-4 border-gray-800">
+          <div class="absolute top-4 left-1/2 -translate-x-1/2 w-28 h-5 bg-black rounded-full z-40"></div>
+
+          <div id="artboard-screen-5" class="w-full h-full bg-[#FAFAFA] rounded-[34px] overflow-hidden flex flex-col relative text-slate-800">
+            <!-- Status bar -->
+            <div class="h-10 pt-2 px-6 flex items-center justify-between text-[11px] font-bold text-gray-800 shrink-0 select-none">
+              <span>10:02</span>
+              <div class="flex items-center gap-1.5"><span>5G</span><div class="w-5 h-2.5 border border-gray-800 rounded-sm p-0.5"><div class="w-full h-full bg-gray-800 rounded-2xs"></div></div></div>
+            </div>
+
+            <!-- Header -->
+            <div class="px-4 py-2 bg-white border-b border-gray-200 flex items-center gap-3">
+              <button onclick="switchMainView('simulator'); goToSimScreen(4);" class="w-7 h-7 rounded-full bg-gray-100 flex items-center justify-center text-xs font-bold hover:bg-gray-200 transition-colors">
+                &larr;
+              </button>
+              <div>
+                <h3 class="font-black text-xs">KOSCOUT Escrow Deal Shield</h3>
+                <p class="text-[10px] text-gray-500">Proteksi Rekber Anti-Penipuan DP 100%</p>
+              </div>
+            </div>
+
+            <!-- Scrollable Content -->
+            <div class="flex-1 overflow-y-auto px-4 py-3 space-y-3 text-xs no-scrollbar">
+              
+              <!-- Anti-Scam Vault Badge -->
+              <div class="bg-gradient-to-r from-slate-900 to-gray-800 text-white p-3.5 rounded-2xl space-y-2 border border-gray-700">
+                <div class="flex items-center gap-2">
+                  <div class="w-8 h-8 rounded-full bg-gojek-green/20 text-gojek-green flex items-center justify-center font-black">
+                    🛡️
+                  </div>
+                  <div>
+                    <div class="font-bold text-xs text-white">Rekening Bersama KOSCOUT</div>
+                    <div class="text-[10px] text-emerald-400">Garansi Uang Kembali 100%</div>
+                  </div>
+                </div>
+                <p class="text-[10px] text-gray-300 leading-relaxed">
+                  Dana DP Anda <strong>TIDAK langsung diteruskan</strong> ke pemilik kost sampai Anda resmi serah terima kunci dan konfirmasi kecocokan kamar.
+                </p>
+              </div>
+
+              <!-- Deal Summary Breakdown -->
+              <div class="bg-white p-3.5 rounded-2xl border border-gray-200 shadow-xs space-y-2.5">
+                <span class="font-extrabold text-gray-900 block">Rincian Booking Kamar:</span>
+                
+                <div class="space-y-1.5 text-[11px]">
+                  <div class="flex justify-between">
+                    <span class="text-gray-500">Kost Tujuan:</span>
+                    <span class="escrow-kost-title font-bold text-gray-800">Wisma Tembalang (Kamar 08)</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span class="text-gray-500">Pemilik / Ibu Kost:</span>
+                    <span class="escrow-landlord-title font-medium text-gray-800">Hj. Ratna Wulandari</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span class="text-gray-500">Uang Muka (DP 1 Bulan):</span>
+                    <span class="escrow-dp-amount font-bold text-gray-900">Rp 1.100.000</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span class="text-gray-500">Biaya Proteksi Escrow Shield:</span>
+                    <span class="text-gojek-darkGreen font-bold">Gratis (Promo Undip)</span>
+                  </div>
+                </div>
+
+                <div class="pt-2 border-t border-gray-100 flex justify-between items-baseline">
+                  <span class="font-extrabold text-gray-900">Total Ditransfer ke Escrow:</span>
+                  <span class="escrow-total-display text-base font-black text-gojek-darkGreen">Rp 1.100.000</span>
+                </div>
+              </div>
+
+              <!-- Digital Contract Clause Accordion -->
+              <div class="bg-emerald-50 border border-emerald-200 rounded-2xl p-3 space-y-1.5 text-[11px] text-emerald-900">
+                <div class="font-bold flex items-center gap-1.5">
+                  <span>📜</span> <span>Surat Perjanjian Sewa Digital Sah:</span>
+                </div>
+                <ul class="space-y-1 text-[10px] text-emerald-800 list-disc pl-4">
+                  <li>Hak sewa kamar terkunci eksklusif selama 12 bulan.</li>
+                  <li>Jika foto/kondisi kamar berbeda saat tiba di Tembalang, DP dikembalikan 100%.</li>
+                  <li>Mitra Scout bertindak sebagai saksi verifikasi fisik resmi.</li>
+                </ul>
+              </div>
+
+              <!-- Payment Method -->
+              <div class="bg-white p-3 rounded-2xl border border-gray-200 shadow-xs flex items-center justify-between">
+                <div class="flex items-center gap-2.5">
+                  <div class="w-8 h-8 rounded-xl bg-blue-500 text-white flex items-center justify-center font-black text-xs">
+                    GP
+                  </div>
+                  <div>
+                    <div class="font-bold text-xs text-gray-900">GoPay / KOSPAY</div>
+                    <div class="text-[10px] text-gray-500">Koneksi Otomatis Superapp</div>
+                  </div>
+                </div>
+                <span class="text-xs font-bold text-gojek-green">Terhubung ✓</span>
+              </div>
+
+            </div>
+
+            <!-- Bottom CTA Button (Triggers Asphalt In-App Receipt Modal) -->
+            <div class="p-4 bg-white border-t border-gray-200 space-y-2">
+              <button onclick="handleEscrowPaymentSuccess()" class="btn-asphalt w-full bg-gojek-green hover:bg-gojek-darkGreen text-white text-xs py-3.5 flex items-center justify-center gap-2 shadow-xl shadow-gojek-green/30">
+                <div class="w-4 h-4 solv-mark text-white"></div>
+                <span>Amankan DP Sekarang</span>
+              </button>
+              <div class="text-center text-[10px] text-gray-400">
+                🛡️ Dilindungi oleh Enkripsi 256-bit KOSCOUT Deal Shield
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- VIEW 3: INTERACTIVE PHONE SIMULATOR (STANDALONE CLICKABLE MOBILE APP) -->
+  <!-- ========================================================================= -->
+  <div id="view-simulator" class="w-full hidden p-4 lg:p-8 flex-col items-center justify-center">
+    
+    <!-- Top Simulator Controls & Screen Tabs -->
+    <div class="w-full max-w-md mb-4 flex items-center justify-between">
+      <div>
+        <div class="text-xs text-gray-500 font-bold uppercase tracking-wider">Interactive Mobile Simulator</div>
+        <div id="sim-title" class="text-sm font-black text-[#101820]">Screen 01: Superapp Beranda</div>
+      </div>
+
+      <!-- Quick Step Jump Buttons -->
+      <div class="flex items-center gap-1 text-xs font-bold">
+        <button id="sim-pill-1" onclick="goToSimScreen(1)" class="w-7 h-7 rounded-full bg-gojek-green text-white flex items-center justify-center shadow-xs">1</button>
+        <button id="sim-pill-2" onclick="goToSimScreen(2)" class="w-7 h-7 rounded-full text-gray-600 hover:text-black flex items-center justify-center">2</button>
+        <button id="sim-pill-3" onclick="goToSimScreen(3)" class="w-7 h-7 rounded-full text-gray-600 hover:text-black flex items-center justify-center">3</button>
+        <button id="sim-pill-4" onclick="goToSimScreen(4)" class="w-7 h-7 rounded-full text-gray-600 hover:text-black flex items-center justify-center">4</button>
+        <button id="sim-pill-5" onclick="goToSimScreen(5)" class="w-7 h-7 rounded-full text-gray-600 hover:text-black flex items-center justify-center">5</button>
+      </div>
+    </div>
+
+    <!-- Phone Hardware Frame -->
+    <div id="simulator-phone-box" class="w-[375px] h-[750px] bg-[#101820] rounded-[44px] p-3 phone-shadow relative overflow-hidden flex flex-col border-4 border-gray-800">
+      <!-- Dynamic Island Notch -->
+      <div class="absolute top-4 left-1/2 -translate-x-1/2 w-28 h-5 bg-black rounded-full z-40"></div>
+
+      <!-- Interactive Inner Screen Container populated by JavaScript -->
+      <div id="sim-inner-container" class="w-full h-full bg-[#FAFAFA] rounded-[34px] overflow-hidden flex flex-col relative text-slate-800">
+        <!-- Rendered dynamically from current artboard screen -->
+      </div>
+    </div>
+
+    <!-- Bottom Simulator Navigation Controls -->
+    <div class="w-full max-w-md mt-4 flex items-center justify-between">
+      <button onclick="navigateSim(-1)" class="btn-asphalt bg-white border border-gray-300 hover:bg-gray-50 text-gray-800 text-xs px-4 py-2 flex items-center gap-1 shadow-xs">
+        &larr; Prev Screen
+      </button>
+
+      <span id="sim-step-indicator" class="text-xs font-mono font-bold text-gray-500">1 / 5</span>
+
+      <button onclick="navigateSim(1)" class="btn-asphalt bg-gojek-green hover:bg-gojek-darkGreen text-white text-xs px-4 py-2 flex items-center gap-1 shadow-xs">
+        Next Screen &rarr;
+      </button>
+    </div>
+
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL 1: LIVE INTERACTIVE WALKTHROUGH (VIDEO CALL SIMULATOR) -->
+  <!-- ========================================================================= -->
+  <div id="modal-videocall" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-4">
+    <div class="bg-[#101820] text-white w-full max-w-md rounded-[36px] overflow-hidden border border-gray-700 shadow-2xl flex flex-col h-[620px] relative">
+      
+      <!-- Video Call Header Bar -->
+      <div class="p-4 bg-gradient-to-b from-black/80 to-transparent flex items-center justify-between z-10">
+        <div class="flex items-center gap-2.5">
+          <div class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping"></div>
+          <div>
+            <div class="font-bold text-xs text-white">Live Walkthrough • Kost Wisma Tembalang</div>
+            <div class="text-[10px] text-gray-300 font-mono">04:18 • Bersama Scout Dimas & Ortu</div>
+          </div>
+        </div>
+        <button onclick="toggleVideoCallModal(false)" class="w-8 h-8 rounded-full bg-white/20 text-white hover:bg-white/30 flex items-center justify-center text-xs font-bold transition-colors">
+          ✕
+        </button>
+      </div>
+
+      <!-- Simulated Video Feed Canvas -->
+      <div class="flex-1 relative bg-gradient-to-br from-slate-800 via-gray-900 to-emerald-950 flex items-center justify-center overflow-hidden">
+        
+        <!-- Background Simulated Room Environment -->
+        <div class="absolute inset-0 opacity-40 bg-[radial-gradient(#00AA13_1px,transparent_1px)] [background-size:16px_16px]"></div>
+        
+        <!-- Live Camera Simulated Graphic -->
+        <div class="text-center space-y-3 z-10 px-6">
+          <div id="call-camera-icon" class="w-20 h-20 rounded-full bg-gojek-green/20 border-2 border-gojek-green flex items-center justify-center mx-auto text-3xl shadow-2xl transition-all">
+            📹
+          </div>
+          <div>
+            <div id="call-camera-title" class="font-extrabold text-sm text-white">Kamera Belakang Scout: Sudut Kamar & Jendela Luar</div>
+            <p id="call-camera-desc" class="text-xs text-emerald-300 font-medium mt-0.5">Ventilasi udara terbuka menghadap taman, sinar matahari masuk optimal.</p>
+          </div>
+          <div class="inline-flex items-center gap-2 bg-black/60 border border-white/20 px-3 py-1 rounded-full text-[11px] font-mono text-gray-200">
+            <span id="call-camera-tag">Jendela & Ventilasi Lolos ✓</span>
+            <span>•</span>
+            <span>228V Grounding OK</span>
+          </div>
+        </div>
+
+        <!-- Picture-in-Picture Self Video (User / Parents) -->
+        <div class="absolute top-16 right-4 w-28 h-36 bg-gray-900 rounded-2xl border-2 border-white/30 overflow-hidden shadow-2xl flex flex-col justify-between p-2 z-20">
+          <div class="text-[9px] font-bold text-gray-300">Anda (Calon Maba)</div>
+          <div class="w-10 h-10 rounded-full bg-purple-600/30 border border-purple-400 text-purple-200 flex items-center justify-center mx-auto text-sm font-bold">
+            👤
+          </div>
+          <div id="call-audio-badge" class="text-[8px] text-emerald-400 font-mono text-center">Audio Aktif</div>
+        </div>
+
+        <!-- Landlord In-Call Badge -->
+        <div class="absolute bottom-20 left-4 bg-black/60 backdrop-blur-md border border-white/20 px-3 py-1.5 rounded-full flex items-center gap-2 z-20">
+          <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+          <span class="text-[10px] font-bold text-gray-200">Ibu Hj. Ratna (Pemilik Kost) Terhubung</span>
+        </div>
+
+      </div>
+
+      <!-- Video Call Action Floating Controls -->
+      <div class="p-4 bg-black/80 border-t border-gray-800 flex items-center justify-around z-10">
+        <button id="btn-call-mute" onclick="toggleCallMute()" class="w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center text-lg transition-colors" title="Mute/Unmute">
+          🎤
+        </button>
+        <button onclick="switchCallCamera()" class="w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center text-lg transition-colors" title="Ganti Sudut Kamera">
+          🔄
+        </button>
+        <button id="btn-call-speaker" onclick="toggleCallSpeaker()" class="w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center text-lg transition-colors" title="Speakerphone">
+          🔊
+        </button>
+        <button onclick="toggleVideoCallModal(false)" class="w-12 h-12 rounded-full bg-red-600 hover:bg-red-700 text-white flex items-center justify-center text-lg transition-colors shadow-lg" title="Akhiri Panggilan">
+          📞
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL 2: 25-POINT SOP INSPECTION PROTOCOL DETAILS -->
+  <!-- ========================================================================= -->
+  <div id="modal-protocol" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-4">
+    <div class="bg-white text-[#101820] w-full max-w-2xl rounded-[36px] overflow-hidden border border-gray-200 shadow-2xl flex flex-col max-h-[85vh] relative">
+      
+      <!-- Modal Header -->
+      <div class="p-5 border-b border-gray-200 flex items-center justify-between bg-gray-50">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-xl bg-gojek-green/20 text-gojek-green flex items-center justify-center font-bold">
+            ✓
+          </div>
+          <div>
+            <h3 class="font-extrabold text-base text-[#101820]">Standardized 25-Point SOP Inspection Protocol</h3>
+            <p class="text-xs text-gray-500">Standar audit fisik ketat mitra KOSCOUT di area Tembalang</p>
+          </div>
+        </div>
+        <button onclick="toggleProtocolModal(false)" class="w-8 h-8 rounded-full bg-gray-200 text-gray-600 hover:bg-gray-300 flex items-center justify-center text-xs font-bold transition-colors">
+          ✕
+        </button>
+      </div>
+
+      <!-- Modal Body (Scrollable 25 Points) -->
+      <div class="p-6 overflow-y-auto space-y-6 text-xs">
+        
+        <!-- Category 1: Sanitasi & Air -->
+        <div class="space-y-2">
+          <div class="flex items-center gap-2 font-black text-sm text-blue-900 border-b border-blue-100 pb-1">
+            <span>💧 1. Sanitasi, Toilet & Kualitas Air (5 Poin)</span>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-gray-700">
+            <div class="p-2.5 bg-gray-50 rounded-xl border border-gray-100"><strong>01. Uji Tekanan & Debit Kran:</strong> Minimal 8 liter/menit saat jam sibuk mandi pagi.</div>
+            <div class="p-2.5 bg-gray-50 rounded-xl border border-gray-100"><strong>02. Uji Kejernihan Air:</strong> Pengukuran TDS & bebas endapan kuning lumpur.</div>
+            <div class="p-2.5 bg-gray-50 rounded-xl border border-gray-100"><strong>03. Uji Bebas Bau:</strong> Dipastikan tidak berbau besi karat atau lumpur rawa.</div>
+            <div class="p-2.5 bg-gray-50 rounded-xl border border-gray-100"><strong>04. Kelancaran Drainase:</strong> Pembuangan lantai lancar tanpa genangan air.</div>
+            <div class="p-2.5 bg-gray-50 rounded-xl border border-gray-100"><strong>05. Kondisi Kloset:</strong> Kloset duduk/jongkok bersih, flush berfungsi normal.</div>
+          </div>
+        </div>
+
+        <!-- Category 2: Listrik & Elektronik -->
+        <div class="space-y-2">
+          <div class="flex items-center gap-2 font-black text-sm text-amber-900 border-b border-amber-100 pb-1">
+            <span>⚡ 2. Kelistrikan & Grounding Stopkontak (4 Poin)</span>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-gray-700">
+            <div class="p-2.5 bg-gray-50 rounded-xl border border-gray-100"><strong>06. Tes Voltase:</strong> Voltase 220V - 230V stabil tanpa drop saat malam.</div>
+            <div class="p-2.5 bg-gray-50 rounded-xl border border-gray-100"><strong>07. Uji Grounding Listrik:</strong> Bebas induksi kebocoran setrum pada body laptop.</div>
+            <div class="p-2.5 bg-gray-50 rounded-xl border border-gray-100"><strong>08. Posisi Stopkontak:</strong> Terletak strategis dekat meja belajar dan kasur.</div>
+            <div class="p-2.5 bg-gray-50 rounded-xl border border-gray-100"><strong>09. Kinerja AC / Kipas Angin:</strong> Suhu dingin stabil & tidak berisik bergetar.</div>
+          </div>
+        </div>
+
+        <!-- Category 3: Wi-Fi & Sinyal Operator -->
+        <div class="space-y-2">
+          <div class="flex items-center gap-2 font-black text-sm text-emerald-900 border-b border-emerald-100 pb-1">
+            <span>📶 3. Internet Wi-Fi & Jaringan Provider (4 Poin)</span>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-gray-700">
+            <div class="p-2.5 bg-gray-50 rounded-xl border border-gray-100"><strong>10. Speedtest Wi-Fi Kamar:</strong> Pengukuran upload/download & ping router.</div>
+            <div class="p-2.5 bg-gray-50 rounded-xl border border-gray-100"><strong>11. Tes Sinyal Telkomsel:</strong> Indikator bar & stabilitas panggilan dalam kamar.</div>
+            <div class="p-2.5 bg-gray-50 rounded-xl border border-gray-100"><strong>12. Tes Sinyal Indosat & XL:</strong> Verifikasi sinyal 4G/5G tidak blindspot.</div>
+            <div class="p-2.5 bg-gray-50 rounded-xl border border-gray-100"><strong>13. Akses Router:</strong> Ketersediaan access point tiap lantai tanpa terhalang.</div>
+          </div>
+        </div>
+
+        <!-- Category 4: Ventilasi & Jamur Dinding -->
+        <div class="space-y-2">
+          <div class="flex items-center gap-2 font-black text-sm text-purple-900 border-b border-purple-100 pb-1">
+            <span>🪟 4. Sirkulasi Udara & Fisik Kamar (4 Poin)</span>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-gray-700">
+            <div class="p-2.5 bg-gray-50 rounded-xl border border-gray-100"><strong>14. Jendela Keluar Langsung:</strong> Ventilasi menghadap sirkulasi udara luar.</div>
+            <div class="p-2.5 bg-gray-50 rounded-xl border border-gray-100"><strong>15. Bebas Lembap & Jamur:</strong> Dinding kering tanpa cat mengelupas akibat rembes.</div>
+            <div class="p-2.5 bg-gray-50 rounded-xl border border-gray-100"><strong>16. Kebersihan Kasur & Lemari:</strong> Kondisi pegas kasur empuk & bebas kutu kasur.</div>
+            <div class="p-2.5 bg-gray-50 rounded-xl border border-gray-100"><strong>17. Pencahayaan Alami Siang Hari:</strong> Kamar terang tanpa harus menyalakan lampu.</div>
+          </div>
+        </div>
+
+        <!-- Category 5: Keamanan & Jam Malam -->
+        <div class="space-y-2">
+          <div class="flex items-center gap-2 font-black text-sm text-red-900 border-b border-red-100 pb-1">
+            <span>🔒 5. Keamanan & Kebijakan Jam Malam (4 Poin)</span>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-gray-700">
+            <div class="p-2.5 bg-gray-50 rounded-xl border border-gray-100"><strong>18. Aturan Jam Malam:</strong> Verifikasi batas jam malam atau kunci gerbang sendiri.</div>
+            <div class="p-2.5 bg-gray-50 rounded-xl border border-gray-100"><strong>19. CCTV Aktif:</strong> Pengecekan monitor pengawas di pintu gerbang & parkiran.</div>
+            <div class="p-2.5 bg-gray-50 rounded-xl border border-gray-100"><strong>20. Kebijakan Tamu:</strong> Aturan berkunjung teman kuliah & ruang tamu bersama.</div>
+            <div class="p-2.5 bg-gray-50 rounded-xl border border-gray-100"><strong>21. Keberadaan Penjaga / Pemilik:</strong> Induk kost tinggal di lokasi atau standby.</div>
+          </div>
+        </div>
+
+        <!-- Category 6: Akses & Parkir -->
+        <div class="space-y-2">
+          <div class="flex items-center gap-2 font-black text-sm text-gray-900 border-b border-gray-200 pb-1">
+            <span>🚗 6. Akses Transportasi & Parkiran (4 Poin)</span>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-gray-700">
+            <div class="p-2.5 bg-gray-50 rounded-xl border border-gray-100"><strong>22. Kapasitas Parkir Motor:</strong> Tempat parkir tertutup kanopi bebas hujan.</div>
+            <div class="p-2.5 bg-gray-50 rounded-xl border border-gray-100"><strong>23. Akses Mobil Papasan:</strong> Lebar gang dan ketersediaan parkir mobil tamu.</div>
+            <div class="p-2.5 bg-gray-50 rounded-xl border border-gray-100"><strong>24. Jarak Jalan Kaki ke Undip:</strong> Waktu tempuh riil ke fakultas sasaran.</div>
+            <div class="p-2.5 bg-gray-50 rounded-xl border border-gray-100"><strong>25. Kebisingan Lingkungan:</strong> Desibel jalan raya, bengkel, atau suara kereta.</div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="p-4 bg-gray-50 border-t border-gray-200 flex items-center justify-between">
+        <span class="text-[11px] text-gray-500 font-mono">Protokol Resmi KOSCOUT Ver. 2026.1</span>
+        <button onclick="toggleProtocolModal(false)" class="btn-asphalt bg-gojek-green hover:bg-gojek-darkGreen text-white text-xs px-5 py-2">
+          Tutup
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL 3: ASPHALT OFFICIAL IN-APP RECEIPT (ESCROW PAYMENT SUCCESS) -->
+  <!-- ========================================================================= -->
+  <div id="modal-receipt" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-4">
+    <div class="bg-white text-[#101820] w-full max-w-sm rounded-[36px] overflow-hidden border border-gray-200 shadow-2xl flex flex-col relative animate-scale">
+      
+      <!-- Top Receipt Pattern -->
+      <div class="bg-gojek-green text-white p-6 text-center space-y-2">
+        <div class="w-12 h-12 rounded-full bg-white text-gojek-darkGreen flex items-center justify-center text-2xl mx-auto shadow-md">
+          ✓
+        </div>
+        <div class="font-extrabold text-lg">DP Kamar Berhasil Diamankan!</div>
+        <p class="text-xs text-emerald-100">Dilindungi 100% oleh KOSCOUT Deal Shield</p>
+      </div>
+
+      <!-- Receipt Body -->
+      <div class="p-5 space-y-4 text-xs">
+        
+        <div class="bg-gray-50 p-3.5 rounded-2xl border border-gray-200 space-y-2">
+          <div class="flex justify-between text-gray-500">
+            <span>Nomor Resi:</span>
+            <span class="font-mono font-bold text-gray-800">KOS-2026-0922-8819</span>
+          </div>
+          <div class="flex justify-between text-gray-500">
+            <span>Waktu:</span>
+            <span class="font-mono text-gray-800">22 Sep 2026, 10:04 WIB</span>
+          </div>
+          <div class="flex justify-between text-gray-500">
+            <span>Metode:</span>
+            <span class="font-bold text-gray-800">GoPay / KOSPAY</span>
+          </div>
+          <div class="flex justify-between text-gray-500">
+            <span>Status Dana:</span>
+            <span class="text-emerald-700 font-bold bg-emerald-100 px-2 py-0.5 rounded-full text-[10px]">Tersimpan di Escrow</span>
+          </div>
+        </div>
+
+        <div class="space-y-1.5 text-[11px]">
+          <div class="flex justify-between font-bold text-gray-900">
+            <span class="escrow-kost-title">Kost Wisma Tembalang (Kamar 08)</span>
+            <span class="escrow-dp-amount">Rp 1.100.000</span>
+          </div>
+          <div class="flex justify-between text-gray-500">
+            <span>Biaya Proteksi Escrow Shield</span>
+            <span class="text-gojek-darkGreen font-bold">Rp 0 (Gratis)</span>
+          </div>
+          <div class="pt-2 border-t border-gray-200 flex justify-between font-black text-sm text-[#101820]">
+            <span>Total Pembayaran:</span>
+            <span class="escrow-total-display text-gojek-darkGreen">Rp 1.100.000</span>
+          </div>
+        </div>
+
+        <div class="bg-blue-50 border border-blue-200 p-3 rounded-2xl text-[10px] text-blue-800 leading-relaxed">
+          ℹ️ Surat Perjanjian Sewa Digital telah dikirimkan ke WhatsApp Anda. Pemilik kost telah menerima konfirmasi penguncian kamar.
+        </div>
+
+        <div class="space-y-2 pt-2">
+          <button onclick="alert('Kuitansi Resmi PDF KOSCOUT berhasil diunduh ke perangkat Anda.')" class="btn-asphalt w-full bg-[#101820] hover:bg-gray-800 text-white text-xs py-3 flex items-center justify-center gap-1.5">
+            <span>Unduh Bukti Kuitansi Sah (PDF)</span>
+          </button>
+          <button onclick="toggleReceiptModal(false)" class="btn-asphalt w-full bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs py-2.5">
+            Kembali ke Beranda
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL 4: MITRA SCOUT REGISTRATION FORM -->
+  <!-- ========================================================================= -->
+  <div id="modal-mitra" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-4">
+    <div class="bg-white text-[#101820] w-full max-w-md rounded-[36px] overflow-hidden border border-gray-200 shadow-2xl flex flex-col relative max-h-[90vh]">
+      
+      <div class="p-5 border-b border-gray-200 flex items-center justify-between bg-gray-50">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-xl bg-gojek-green/20 text-gojek-green flex items-center justify-center font-bold">
+            🛵
+          </div>
+          <div>
+            <h3 class="font-extrabold text-sm text-[#101820]">Daftar Jadi Mitra Scout Tembalang</h3>
+            <p class="text-[10px] text-gray-500">Khusus Mahasiswa Aktif Undip Semester 3-7</p>
+          </div>
+        </div>
+        <button onclick="toggleMitraModal(false)" class="w-8 h-8 rounded-full bg-gray-200 text-gray-600 hover:bg-gray-300 flex items-center justify-center text-xs font-bold">
+          ✕
+        </button>
+      </div>
+
+      <div class="p-5 overflow-y-auto space-y-3 text-xs">
+        
+        <div class="space-y-1">
+          <label class="font-bold text-gray-700">Nama Lengkap:</label>
+          <input type="text" placeholder="e.g. Dimas Suryo Prayoga" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2.5 focus:outline-none focus:ring-2 focus:ring-gojek-green">
+        </div>
+
+        <div class="space-y-1">
+          <label class="font-bold text-gray-700">Fakultas & Jurusan Undip:</label>
+          <input type="text" placeholder="e.g. Fakultas Teknik / Teknik Mesin" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2.5 focus:outline-none focus:ring-2 focus:ring-gojek-green">
+        </div>
+
+        <div class="grid grid-cols-2 gap-2">
+          <div class="space-y-1">
+            <label class="font-bold text-gray-700">NIM / Angkatan:</label>
+            <input type="text" placeholder="210501221400..." class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2.5 focus:outline-none focus:ring-2 focus:ring-gojek-green">
+          </div>
+          <div class="space-y-1">
+            <label class="font-bold text-gray-700">Nomor WhatsApp:</label>
+            <input type="tel" placeholder="0812xxxxxxxx" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2.5 focus:outline-none focus:ring-2 focus:ring-gojek-green">
+          </div>
+        </div>
+
+        <div class="space-y-1">
+          <label class="font-bold text-gray-700">Tipe Kendaraan Motor:</label>
+          <input type="text" placeholder="e.g. Honda Vario 150 (Plat H)" class="w-full bg-gray-50 border border-gray-300 rounded-xl p-2.5 focus:outline-none focus:ring-2 focus:ring-gojek-green">
+        </div>
+
+        <div class="space-y-1">
+          <label class="font-bold text-gray-700">Foto Kartu Tanda Mahasiswa (KTM Undip):</label>
+          <div class="border-2 border-dashed border-gray-300 rounded-2xl p-4 text-center text-gray-500 hover:border-gojek-green cursor-pointer transition-colors">
+            <span class="text-xl">📷</span>
+            <div class="text-[11px] font-bold mt-1">Unggah Foto KTM Undip Jelas</div>
+            <div class="text-[9px] text-gray-400">Format JPG/PNG maksimal 5MB</div>
+          </div>
+        </div>
+
+        <div class="pt-2">
+          <button onclick="submitMitraForm()" class="btn-asphalt w-full bg-gojek-green hover:bg-gojek-darkGreen text-white text-xs py-3 shadow-md shadow-gojek-green/20">
+            Kirim Pendaftaran Mitra Scout &rarr;
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL 5: SCOUT LIVE DISPATCH CHAT (SCREEN 3 ACTIVE ORDER COORDINATION) -->
+  <!-- ========================================================================= -->
+  <div id="modal-chat" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-4">
+    <div class="bg-white text-[#101820] w-full max-w-md rounded-[36px] overflow-hidden border border-gray-200 shadow-2xl flex flex-col h-[560px] relative">
+      
+      <!-- Chat Top Header -->
+      <div class="p-3.5 bg-white border-b border-gray-200 flex items-center justify-between shadow-xs">
+        <div class="flex items-center gap-2.5">
+          <div class="relative">
+            <div class="w-9 h-9 rounded-full bg-gojek-green text-white flex items-center justify-center font-bold text-xs">
+              DP
+            </div>
+            <span class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-500 rounded-full border border-white"></span>
+          </div>
+          <div>
+            <div class="font-bold text-xs flex items-center gap-1">
+              <span>Dimas Prayoga</span>
+              <span class="text-[9px] bg-emerald-100 text-emerald-800 font-bold px-1 rounded">Scout</span>
+            </div>
+            <div class="text-[10px] text-gray-400">Honda Vario • H 4821 BP</div>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-1">
+          <button onclick="toggleVideoCallModal(true); toggleChatModal(false);" class="w-8 h-8 rounded-full bg-purple-50 text-purple-700 flex items-center justify-center text-sm" title="Live Video Call">
+            📹
+          </button>
+          <button onclick="toggleChatModal(false)" class="w-8 h-8 rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200 flex items-center justify-center text-xs font-bold">
+            ✕
+          </button>
+        </div>
+      </div>
+
+      <!-- Chat Messages Scrollable Body -->
+      <div id="chat-messages-container" class="flex-1 overflow-y-auto p-4 space-y-3 bg-[#F8FAFC] text-xs">
+        
+        <div class="text-center">
+          <span class="bg-gray-200 text-gray-600 text-[9px] px-2.5 py-0.5 rounded-full font-mono">Hari ini, 09:42 WIB</span>
+        </div>
+
+        <!-- Scout Incoming Message -->
+        <div class="flex items-start gap-2 max-w-[85%]">
+          <div class="w-6 h-6 rounded-full bg-gojek-green text-white text-[10px] font-bold flex items-center justify-center shrink-0">
+            DP
+          </div>
+          <div class="bg-white p-3 rounded-2xl rounded-tl-xs border border-gray-200 shadow-2xs space-y-1">
+            <p class="text-gray-800">Halo kak! Saya Dimas, Scout KOSCOUT Anda. Saya sedang menuju ke Kost Wisma Tembalang.</p>
+            <span class="text-[9px] text-gray-400 block text-right font-mono">09:42</span>
+          </div>
+        </div>
+
+        <!-- Scout Incoming Message 2 -->
+        <div class="flex items-start gap-2 max-w-[85%]">
+          <div class="w-6 h-6 rounded-full bg-gojek-green text-white text-[10px] font-bold flex items-center justify-center shrink-0">
+            DP
+          </div>
+          <div class="bg-white p-3 rounded-2xl rounded-tl-xs border border-gray-200 shadow-2xs space-y-1">
+            <p class="text-gray-800">Ada permintaan spesifik yang ingin saya periksa duluan begitu sampai?</p>
+            <span class="text-[9px] text-gray-400 block text-right font-mono">09:43</span>
+          </div>
+        </div>
+
+        <!-- User Message -->
+        <div class="flex items-start justify-end gap-2 ml-auto max-w-[85%]">
+          <div class="bg-gojek-green text-white p-3 rounded-2xl rounded-tr-xs shadow-2xs space-y-1">
+            <p>Halo mas Dimas! Tolong cek debit air shower sama tes stopkontak dekat kasur ya mas.</p>
+            <span class="text-[9px] text-emerald-200 block text-right font-mono">09:44 ✓✓</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Quick Reply Pills -->
+      <div class="px-3 py-1.5 bg-white border-t border-gray-100 flex gap-1.5 overflow-x-auto no-scrollbar text-[10px]">
+        <button onclick="sendQuickReply('Apakah ibu kostnya ada di lokasi mas?')" class="px-2.5 py-1 rounded-full bg-gray-100 text-gray-700 hover:bg-emerald-50 hover:text-gojek-darkGreen shrink-0 transition-colors">
+          Ibu kost ada?
+        </button>
+        <button onclick="sendQuickReply('Bisa tolong tes sinyal Telkomsel di dalam kamar?')" class="px-2.5 py-1 rounded-full bg-gray-100 text-gray-700 hover:bg-emerald-50 hover:text-gojek-darkGreen shrink-0 transition-colors">
+          Tes sinyal Telkomsel
+        </button>
+        <button onclick="sendQuickReply('Apakah gembok gerbang 24 jam bebas?')" class="px-2.5 py-1 rounded-full bg-gray-100 text-gray-700 hover:bg-emerald-50 hover:text-gojek-darkGreen shrink-0 transition-colors">
+          Jam malam gerbang?
+        </button>
+      </div>
+
+      <!-- Chat Input Field -->
+      <div class="p-3 bg-white border-t border-gray-200 flex items-center gap-2">
+        <input type="text" id="chat-input-field" onkeypress="if(event.key==='Enter') sendChatMessage()" placeholder="Ketik pesan untuk Scout..." class="flex-1 bg-gray-50 border border-gray-200 rounded-full px-4 py-2 text-xs text-gray-800 focus:outline-none focus:ring-2 focus:ring-gojek-green">
+        <button onclick="sendChatMessage()" class="w-9 h-9 rounded-full bg-gojek-green hover:bg-gojek-darkGreen text-white flex items-center justify-center shrink-0 shadow-sm transition-colors">
+          ➤
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL 6: TANYA KATING & WARLOK MENTORSHIP CHAT (KONSULTASI UNDIP) -->
+  <!-- ========================================================================= -->
+  <div id="modal-kating" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-4">
+    <div class="bg-white text-[#101820] w-full max-w-md rounded-[36px] overflow-hidden border border-gray-200 shadow-2xl flex flex-col h-[580px] relative">
+      
+      <!-- Kating Top Header -->
+      <div class="p-3.5 bg-gradient-to-r from-emerald-800 to-gojek-darkGreen text-white flex items-center justify-between shadow-xs">
+        <div class="flex items-center gap-2.5">
+          <div class="relative">
+            <div class="w-10 h-10 rounded-full bg-white text-emerald-800 flex items-center justify-center font-extrabold text-sm shadow-sm">
+              🎓
+            </div>
+            <span class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-400 rounded-full border border-white"></span>
+          </div>
+          <div>
+            <div class="font-extrabold text-xs flex items-center gap-1.5 text-white">
+              <span>Tanya Kating & Warlok Tembalang</span>
+            </div>
+            <div class="text-[10px] text-emerald-100">Kak Salsabila (FEB '21) & Kak Fajar (FT '22) Online</div>
+          </div>
+        </div>
+
+        <button onclick="toggleKatingModal(false)" class="w-8 h-8 rounded-full bg-white/20 text-white hover:bg-white/30 flex items-center justify-center text-xs font-bold transition-colors">
+          ✕
+        </button>
+      </div>
+
+      <!-- Kating Chat Messages Scrollable Body -->
+      <div id="kating-messages-container" class="flex-1 overflow-y-auto p-4 space-y-3 bg-[#F8FAFC] text-xs">
+        
+        <div class="text-center">
+          <span class="bg-emerald-100 text-emerald-800 text-[9px] px-3 py-1 rounded-full font-bold">Sahabat Mahasiswa Rantau Undip</span>
+        </div>
+
+        <!-- Kating Message 1 -->
+        <div class="flex items-start gap-2 max-w-[85%]">
+          <div class="w-6 h-6 rounded-full bg-emerald-700 text-white text-[10px] font-bold flex items-center justify-center shrink-0">
+            SB
+          </div>
+          <div class="bg-white p-3 rounded-2xl rounded-tl-xs border border-gray-200 shadow-2xs space-y-1">
+            <div class="text-[10px] font-bold text-emerald-700">Kak Salsabila (FEB Undip '21)</div>
+            <p class="text-gray-800">Halo dek maba! Selamat datang di Undip Tembalang ya! Ada yang mau ditanyain seputar kawasan kos, rekomendasi area aman, atau jarak ke fakultas?</p>
+            <span class="text-[9px] text-gray-400 block text-right font-mono">09:30</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Quick Topic Buttons -->
+      <div class="px-3 py-2 bg-white border-t border-gray-100 flex gap-1.5 overflow-x-auto no-scrollbar text-[10px]">
+        <button onclick="askKatingTopic('banjir')" class="px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 hover:bg-emerald-100 shrink-0 font-medium transition-colors">
+          🌊 Daerah bebas banjir?
+        </button>
+        <button onclick="askKatingTopic('budget')" class="px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 hover:bg-emerald-100 shrink-0 font-medium transition-colors">
+          💰 Budget 1-1,5 jt dapet AC?
+        </button>
+        <button onclick="askKatingTopic('jammalam')" class="px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 hover:bg-emerald-100 shrink-0 font-medium transition-colors">
+          🔒 Tips jam malam gerbang?
+        </button>
+        <button onclick="askKatingTopic('jalan')" class="px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 hover:bg-emerald-100 shrink-0 font-medium transition-colors">
+          🚶 Kos bisa jalan kaki ke Undip?
+        </button>
+      </div>
+
+      <!-- Chat Input Field -->
+      <div class="p-3 bg-white border-t border-gray-200 flex items-center gap-2">
+        <input type="text" id="kating-input-field" onkeypress="if(event.key==='Enter') sendKatingMessage()" placeholder="Tanya apa saja ke kating Tembalang..." class="flex-1 bg-gray-50 border border-gray-200 rounded-full px-4 py-2 text-xs text-gray-800 focus:outline-none focus:ring-2 focus:ring-gojek-green">
+        <button onclick="sendKatingMessage()" class="w-9 h-9 rounded-full bg-gojek-green hover:bg-gojek-darkGreen text-white flex items-center justify-center shrink-0 shadow-sm transition-colors">
+          ➤
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL 7: SCOUT MOVER QUICK BOOKING (LUGGAGE & MOVING SERVICE) -->
+  <!-- ========================================================================= -->
+  <div id="modal-mover" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-4">
+    <div class="bg-white text-[#101820] w-full max-w-md rounded-[36px] overflow-hidden border border-gray-200 shadow-2xl flex flex-col relative max-h-[90vh]">
+      
+      <div class="p-5 border-b border-gray-200 flex items-center justify-between bg-orange-50">
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-xl bg-orange-500 text-white flex items-center justify-center font-bold text-lg shadow-sm">
+            📦
+          </div>
+          <div>
+            <h3 class="font-extrabold text-sm text-[#101820]">ScoutMover: Jemput Koper & Pindahan</h3>
+            <p class="text-[10px] text-gray-500">Antar barang dari Stasiun / Terminal ke Kos Tembalang</p>
+          </div>
+        </div>
+        <button onclick="toggleMoverModal(false)" class="w-8 h-8 rounded-full bg-gray-200 text-gray-600 hover:bg-gray-300 flex items-center justify-center text-xs font-bold">
+          ✕
+        </button>
+      </div>
+
+      <div class="p-5 overflow-y-auto space-y-3.5 text-xs">
+        
+        <div class="bg-gray-50 p-3 rounded-2xl border border-gray-200 space-y-1.5">
+          <label class="font-bold text-gray-800 block">Pilih Titik Jemput di Semarang:</label>
+          <select id="mover-pickup" class="w-full bg-white border border-gray-300 rounded-xl p-2 text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-orange-500">
+            <option value="tawang">Stasiun Semarang Tawang (Kereta Eksekutif/Bisnis)</option>
+            <option value="poncol">Stasiun Semarang Poncol (Kereta Ekonomi)</option>
+            <option value="banyumanik">Terminal Bus Banyumanik (Bus AKAP)</option>
+            <option value="airport">Bandara Jenderal Ahmad Yani</option>
+          </select>
+        </div>
+
+        <div class="bg-gray-50 p-3 rounded-2xl border border-gray-200 space-y-1.5">
+          <label class="font-bold text-gray-800 block">Tujuan Pengantaran:</label>
+          <div class="bg-white p-2.5 rounded-xl border border-gray-200 text-gray-700">
+            <div class="font-bold">Kamar Kos di Area Tembalang Undip</div>
+            <div class="text-[10px] text-gray-400">Mitra Scout siap bantu angkat koper sampai ke depan pintu kamar kos</div>
+          </div>
+        </div>
+
+        <div class="bg-orange-50/70 p-3 rounded-2xl border border-orange-200 space-y-2">
+          <div class="flex justify-between items-center">
+            <span class="font-bold text-orange-950">Tarif Pelajar Maba:</span>
+            <span class="font-black text-base text-orange-600">Rp 45.000</span>
+          </div>
+          <p class="text-[10px] text-orange-800 leading-relaxed">
+            Termasuk 1 koper besar + 1 kardus barang. Tambahan koper/kardus ekstra hanya +Rp 15.000.
+          </p>
+        </div>
+
+        <div class="space-y-2 pt-1">
+          <button onclick="addMoverToOrder()" class="btn-asphalt w-full bg-orange-600 hover:bg-orange-700 text-white text-xs py-3 flex items-center justify-center gap-1.5 shadow-md shadow-orange-600/20">
+            <span>+ Tambahkan ke Pesanan Scout (Buka Screen 02)</span>
+          </button>
+          <button onclick="alert('Pesanan ScoutMover mandiri berhasil dicatat! Tim scout logistik KOSCOUT akan menghubungi WhatsApp Anda.'); toggleMoverModal(false);" class="btn-asphalt w-full bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs py-2.5">
+            Pesan Khusus ScoutMover Saja
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- JAVASCRIPT LOGIC & INTERACTIVITY ENGINE -->
+  <!-- ========================================================================= -->
+  <script>
+    // Centralized Application State
+    const appState = {
+      selectedPackage: 'triple', // 'single' | 'triple' | 'vip'
+      targetKost: {
+        title: 'Kost Wisma Tembalang Permai',
+        address: 'Jl. Banjarsari No. 42A, Tembalang (500m dari FT Undip)',
+        room: 'Kamar 08',
+        landlord: 'Hj. Ratna Wulandari',
+        dpAmount: 1100000
+      },
+      zone: 'ring1', // 'ring1' (0) | 'ring2' (5000) | 'ring3' (10000)
+      addons: {
+        escrow: false,
+        mover: false,
+        tour: false
+      },
+      criteriaChecked: [true, true, true, true, true, true],
+      searchQuery: '',
+      categoryFilter: 'all',
+      currentMainView: 'website',
+      currentSimScreen: 1,
+      callState: {
+        isMuted: false,
+        speakerOn: true,
+        cameraIdx: 0
+      }
+    };
+
+    // Format Rupiah Helper
+    function formatRupiah(num) {
+      return new Intl.NumberFormat('id-ID', {
+        style: 'currency',
+        currency: 'IDR',
+        maximumFractionDigits: 0
+      }).format(num);
+    }
+
+    // Switch Main Views: 'website' | 'canvas' | 'simulator'
+    function switchMainView(mode, updateHash = true) {
+      appState.currentMainView = mode;
+      
+      const viewWebsite = document.getElementById('view-website');
+      const viewCanvas = document.getElementById('view-canvas');
+      const viewSimulator = document.getElementById('view-simulator');
+
+      const btnWebsite = document.getElementById('btn-mode-website');
+      const btnCanvas = document.getElementById('btn-mode-canvas');
+      const btnSim = document.getElementById('btn-mode-sim');
+
+      // Hide all
+      viewWebsite.classList.add('hidden');
+      viewCanvas.classList.add('hidden');
+      viewSimulator.classList.add('hidden');
+      viewSimulator.classList.remove('flex');
+
+      // Reset button styles
+      [btnWebsite, btnCanvas, btnSim].forEach(btn => {
+        btn.className = 'px-3.5 py-1.5 rounded-full transition-all flex items-center gap-1.5 text-gray-300 hover:text-white';
+      });
+
+      if (mode === 'website') {
+        viewWebsite.classList.remove('hidden');
+        btnWebsite.className = 'px-3.5 py-1.5 rounded-full transition-all flex items-center gap-1.5 bg-gojek-green text-white shadow-sm';
+      } else if (mode === 'canvas') {
+        viewCanvas.classList.remove('hidden');
+        btnCanvas.className = 'px-3.5 py-1.5 rounded-full transition-all flex items-center gap-1.5 bg-gojek-green text-white shadow-sm';
+      } else if (mode === 'simulator') {
+        viewSimulator.classList.remove('hidden');
+        viewSimulator.classList.add('flex');
+        btnSim.className = 'px-3.5 py-1.5 rounded-full transition-all flex items-center gap-1.5 bg-gojek-green text-white shadow-sm';
+        renderSimulatorScreen(appState.currentSimScreen);
+      }
+
+      if (updateHash && window.location.hash !== `#${mode}`) {
+        window.location.hash = mode;
+      }
+    }
+
+    // Navigate Mobile Screens inside Simulator
+    function goToSimScreen(screenIndex) {
+      if (screenIndex < 1) screenIndex = 1;
+      if (screenIndex > 5) screenIndex = 5;
+      appState.currentSimScreen = screenIndex;
+      renderSimulatorScreen(screenIndex);
+    }
+
+    function navigateSim(delta) {
+      goToSimScreen(appState.currentSimScreen + delta);
+    }
+
+    const simScreenMeta = [
+      { title: "Screen 01: Superapp Beranda" },
+      { title: "Screen 02: Pesan Jasa Scout & 25 Poin Kriteria" },
+      { title: "Screen 03: Live Radar & Tracking Mitra Scout" },
+      { title: "Screen 04: Laporan Bukti Fisik Audit 25 Poin" },
+      { title: "Screen 05: Escrow Deal Shield & Rekber DP" },
+    ];
+
+    function renderSimulatorScreen(screenIndex) {
+      const container = document.getElementById('sim-inner-container');
+      const titleLabel = document.getElementById('sim-title');
+      const stepIndicator = document.getElementById('sim-step-indicator');
+
+      if (titleLabel) titleLabel.textContent = simScreenMeta[screenIndex - 1].title;
+      if (stepIndicator) stepIndicator.textContent = `${screenIndex} / 5`;
+
+      // Update step pills
+      for (let i = 1; i <= 5; i++) {
+        const pill = document.getElementById(`sim-pill-${i}`);
+        if (pill) {
+          if (i === screenIndex) {
+            pill.className = 'w-7 h-7 rounded-full bg-gojek-green text-white flex items-center justify-center font-bold shadow-xs';
+          } else {
+            pill.className = 'w-7 h-7 rounded-full text-gray-600 hover:text-black flex items-center justify-center font-bold';
+          }
+        }
+      }
+
+      // Populate content from canvas artboards reliably
+      const sourceInner = document.getElementById(`artboard-screen-${screenIndex}`);
+      if (sourceInner && container) {
+        container.innerHTML = sourceInner.innerHTML;
+        container.className = sourceInner.className;
+      }
+
+      // Sync state into the freshly rendered simulator view
+      updateOrderScreenUI();
+      filterKostItems();
+    }
+
+    // Interactive Tariff Calculator on Website (BMC Economics)
+    function calculateTariff() {
+      const serviceSelect = document.getElementById('calc-service');
+      const serviceVal = parseInt(serviceSelect ? serviceSelect.value : 99000) || 99000;
+      
+      const areaSelect = document.getElementById('calc-area');
+      const areaVal = parseInt(areaSelect ? areaSelect.value : 0) || 0;
+
+      const escrowCheckbox = document.getElementById('calc-escrow');
+      let escrowVal = 0;
+      if (escrowCheckbox && escrowCheckbox.checked) {
+        escrowVal = serviceVal === 229000 ? 0 : 50000;
+      }
+
+      const moverCheckbox = document.getElementById('calc-mover');
+      const moverVal = (moverCheckbox && moverCheckbox.checked) ? 45000 : 0;
+
+      const tourCheckbox = document.getElementById('calc-tour');
+      let tourVal = 0;
+      if (tourCheckbox && tourCheckbox.checked) {
+        tourVal = serviceVal === 229000 ? 0 : 15000;
+      }
+
+      const total = serviceVal + areaVal + escrowVal + moverVal + tourVal;
+      const formatted = formatRupiah(total);
+
+      const totalEl = document.getElementById('calc-total');
+      if (totalEl) totalEl.textContent = formatted;
+
+      const breakdownEl = document.getElementById('calc-breakdown');
+      if (breakdownEl) {
+        const pkgName = serviceVal === 39000 ? 'Single Scout' : serviceVal === 229000 ? 'VIP Mandiri Rush' : 'Triple Scout Bundle';
+        const areaText = areaVal === 0 ? 'Ring 1 Undip (Rp 0)' : areaVal === 5000 ? 'Ring 2 (+Rp 5k)' : 'Ring 3 (+Rp 10k)';
+        const addons = [];
+        if (escrowCheckbox && escrowCheckbox.checked) {
+          addons.push(serviceVal === 229000 ? 'Escrow (Gratis VIP)' : 'Escrow +Rp 50k');
+        }
+        if (moverVal > 0) addons.push('ScoutMover +Rp 45k');
+        if (tourCheckbox && tourCheckbox.checked) {
+          addons.push(serviceVal === 229000 ? 'Video Tour (Gratis VIP)' : 'Extra Tour +Rp 15k');
+        }
+        const addonText = addons.length > 0 ? addons.join(', ') : 'Tanpa Add-on';
+        breakdownEl.textContent = `Paket: ${pkgName} • ${areaText} • ${addonText}`;
+      }
+    }
+
+    // Transfer configuration from website calculator directly into mobile Screen 2
+    function orderFromCalculator() {
+      const serviceVal = parseInt(document.getElementById('calc-service').value) || 99000;
+      if (serviceVal === 39000) {
+        appState.selectedPackage = 'single';
+      } else if (serviceVal === 229000) {
+        appState.selectedPackage = 'vip';
+      } else {
+        appState.selectedPackage = 'triple';
+      }
+
+      const areaVal = parseInt(document.getElementById('calc-area').value) || 0;
+      appState.zone = areaVal === 10000 ? 'ring3' : areaVal === 5000 ? 'ring2' : 'ring1';
+
+      const escrowEl = document.getElementById('calc-escrow');
+      appState.addons.escrow = escrowEl ? escrowEl.checked : false;
+
+      const moverEl = document.getElementById('calc-mover');
+      appState.addons.mover = moverEl ? moverEl.checked : false;
+
+      const tourEl = document.getElementById('calc-tour');
+      appState.addons.tour = tourEl ? tourEl.checked : false;
+
+      updateOrderScreenUI();
+      switchMainView('simulator');
+      goToSimScreen(2);
+    }
+
+    // Select package in Screen 2
+    function selectOrderPackage(pkgType) {
+      appState.selectedPackage = pkgType;
+      updateOrderScreenUI();
+    }
+
+    function updateZone(zoneVal) {
+      appState.zone = zoneVal;
+      updateOrderScreenUI();
+    }
+
+    function toggleAddon(addonKey, isChecked) {
+      appState.addons[addonKey] = isChecked;
+      updateOrderScreenUI();
+    }
+
+    function toggleCriteria(idx, isChecked) {
+      appState.criteriaChecked[idx] = isChecked;
+      updateOrderScreenUI();
+    }
+
+    // Reactive UI Updater for Screen 2 (Order Screen)
+    function updateOrderScreenUI() {
+      // 1. Update Package Cards
+      ['single', 'triple', 'vip'].forEach(pkg => {
+        document.querySelectorAll(`.pkg-card-${pkg}`).forEach(card => {
+          const isSelected = appState.selectedPackage === pkg;
+          if (isSelected) {
+            card.className = `pkg-card-${pkg} bg-emerald-50/80 p-3 rounded-2xl border-2 border-gojek-green shadow-xs flex items-center justify-between cursor-pointer transition-all`;
+          } else {
+            card.className = `pkg-card-${pkg} bg-white p-3 rounded-2xl border border-gray-200 shadow-xs flex items-center justify-between cursor-pointer opacity-75 hover:opacity-100 transition-all`;
+          }
+        });
+      });
+
+      // 2. Calculate Total Tariff
+      const pkgPrices = {
+        'single': 39000,
+        'triple': 99000,
+        'vip': 229000
+      };
+      const basePkgPrice = pkgPrices[appState.selectedPackage] || 99000;
+      const zonePrice = appState.zone === 'ring3' ? 10000 : appState.zone === 'ring2' ? 5000 : 0;
+      
+      // Escrow is free in VIP
+      const escrowPrice = appState.addons.escrow ? (appState.selectedPackage === 'vip' ? 0 : 50000) : 0;
+      const moverPrice = appState.addons.mover ? 45000 : 0;
+      // Extra tour is free in VIP
+      const tourPrice = appState.addons.tour ? (appState.selectedPackage === 'vip' ? 0 : 15000) : 0;
+
+      const total = basePkgPrice + zonePrice + escrowPrice + moverPrice + tourPrice;
+      const formattedTotal = formatRupiah(total);
+
+      document.querySelectorAll('.order-total-display').forEach(el => {
+        el.textContent = formattedTotal;
+      });
+
+      // 3. Update Add-on Checkbox Inputs
+      document.querySelectorAll('.chk-addon-escrow').forEach(el => el.checked = appState.addons.escrow);
+      document.querySelectorAll('.chk-addon-mover').forEach(el => el.checked = appState.addons.mover);
+      document.querySelectorAll('.chk-addon-tour').forEach(el => el.checked = appState.addons.tour);
+      document.querySelectorAll('.select-zone').forEach(el => el.value = appState.zone);
+
+      // Addon price text badges (show GRATIS if VIP)
+      document.querySelectorAll('.addon-price-escrow').forEach(el => {
+        el.textContent = appState.selectedPackage === 'vip' ? 'Gratis (VIP)' : '+Rp 50.000';
+      });
+      document.querySelectorAll('.addon-price-tour').forEach(el => {
+        el.textContent = appState.selectedPackage === 'vip' ? 'Gratis (VIP)' : '+Rp 15.000';
+      });
+
+      // 4. Update 25-Point Criteria Checkboxes & Counter
+      for (let i = 0; i < 6; i++) {
+        document.querySelectorAll(`.criteria-cb-${i}`).forEach(el => {
+          el.checked = !!appState.criteriaChecked[i];
+        });
+      }
+      const checkedCount = appState.criteriaChecked.filter(Boolean).length;
+      document.querySelectorAll('.checklist-counter-display').forEach(el => {
+        el.textContent = `${checkedCount} dari 6 dipilih`;
+      });
+
+      // 5. Update Target Kost Titles across screens
+      document.querySelectorAll('.target-kost-title').forEach(el => {
+        el.textContent = appState.targetKost.title;
+      });
+      document.querySelectorAll('.target-kost-address').forEach(el => {
+        el.textContent = appState.targetKost.address;
+      });
+      document.querySelectorAll('.escrow-kost-title').forEach(el => {
+        el.textContent = `${appState.targetKost.title} (${appState.targetKost.room})`;
+      });
+      document.querySelectorAll('.escrow-landlord-title').forEach(el => {
+        el.textContent = appState.targetKost.landlord;
+      });
+      document.querySelectorAll('.escrow-dp-amount').forEach(el => {
+        el.textContent = formatRupiah(appState.targetKost.dpAmount);
+      });
+      document.querySelectorAll('.escrow-total-display').forEach(el => {
+        el.textContent = formatRupiah(appState.targetKost.dpAmount);
+      });
+    }
+
+    // Specific Kost Selection
+    function orderSpecificKost(title, address, room = 'Kamar 08', landlord = 'Hj. Ratna Wulandari', dpAmount = 1100000) {
+      appState.targetKost = { title, address, room, landlord, dpAmount };
+      updateOrderScreenUI();
+      switchMainView('simulator');
+      goToSimScreen(2);
+    }
+
+    // Live Search & Category Filtering in Screen 1
+    function handleKostSearch(query) {
+      appState.searchQuery = query;
+      document.querySelectorAll('.kost-search-input').forEach(input => {
+        if (input.value !== query) input.value = query;
+      });
+      filterKostItems();
+    }
+
+    function handleCategoryFilter(category) {
+      appState.categoryFilter = category;
+      
+      document.querySelectorAll('.chip-filter').forEach(chip => {
+        const cat = chip.getAttribute('data-cat');
+        if (cat === category) {
+          chip.className = 'chip-filter px-2.5 py-1 rounded-full bg-gojek-green text-white shadow-xs shrink-0';
+        } else {
+          chip.className = 'chip-filter px-2.5 py-1 rounded-full bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 shrink-0';
+        }
+      });
+
+      filterKostItems();
+    }
+
+    function filterKostItems() {
+      const query = (appState.searchQuery || '').toLowerCase().trim();
+      const category = appState.categoryFilter || 'all';
+
+      document.querySelectorAll('.kost-card-item').forEach(item => {
+        const searchKeywords = (item.getAttribute('data-search') || '').toLowerCase();
+        const itemCategories = (item.getAttribute('data-category') || '').toLowerCase();
+
+        const matchesQuery = query === '' || searchKeywords.includes(query);
+        const matchesCategory = category === 'all' || itemCategories.includes(category);
+
+        if (matchesQuery && matchesCategory) {
+          item.classList.remove('hidden');
+        } else {
+          item.classList.add('hidden');
+        }
+      });
+
+      document.querySelectorAll('.kost-empty-state').forEach(emptyEl => {
+        const parent = emptyEl.parentElement;
+        if (parent) {
+          const visibleCount = parent.querySelectorAll('.kost-card-item:not(.hidden)').length;
+          if (visibleCount === 0) {
+            emptyEl.classList.remove('hidden');
+          } else {
+            emptyEl.classList.add('hidden');
+          }
+        }
+      });
+    }
+
+    // Modal Toggles
+    function toggleVideoCallModal(show) {
+      const modal = document.getElementById('modal-videocall');
+      if (modal) modal.classList.toggle('hidden', !show);
+    }
+
+    function toggleProtocolModal(show) {
+      const modal = document.getElementById('modal-protocol');
+      if (modal) modal.classList.toggle('hidden', !show);
+    }
+
+    function toggleReceiptModal(show) {
+      const modal = document.getElementById('modal-receipt');
+      if (modal) modal.classList.toggle('hidden', !show);
+    }
+
+    function toggleMitraModal(show) {
+      const modal = document.getElementById('modal-mitra');
+      if (modal) modal.classList.toggle('hidden', !show);
+    }
+
+    function toggleChatModal(show) {
+      const modal = document.getElementById('modal-chat');
+      if (modal) modal.classList.toggle('hidden', !show);
+    }
+
+    function toggleKatingModal(show) {
+      const modal = document.getElementById('modal-kating');
+      if (modal) modal.classList.toggle('hidden', !show);
+    }
+
+    function toggleMoverModal(show) {
+      const modal = document.getElementById('modal-mover');
+      if (modal) modal.classList.toggle('hidden', !show);
+    }
+
+    function openScoutChatModal() {
+      toggleChatModal(true);
+    }
+
+    function openTanyaKatingModal() {
+      toggleKatingModal(true);
+    }
+
+    function openScoutMoverModal() {
+      toggleMoverModal(true);
+    }
+
+    function addMoverToOrder() {
+      appState.addons.mover = true;
+      toggleMoverModal(false);
+      updateOrderScreenUI();
+      switchMainView('simulator');
+      goToSimScreen(2);
+    }
+
+    function handleEscrowPaymentSuccess() {
+      toggleReceiptModal(true);
+    }
+
+    // Video Call Interactive Controls
+    function toggleCallMute() {
+      appState.callState.isMuted = !appState.callState.isMuted;
+      const btn = document.getElementById('btn-call-mute');
+      const badge = document.getElementById('call-audio-badge');
+      if (btn) {
+        btn.innerHTML = appState.callState.isMuted ? '🔇' : '🎤';
+        btn.className = appState.callState.isMuted 
+          ? 'w-12 h-12 rounded-full bg-red-600 text-white flex items-center justify-center text-lg shadow-md' 
+          : 'w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center text-lg';
+      }
+      if (badge) {
+        badge.textContent = appState.callState.isMuted ? 'Audio Dimatikan' : 'Audio Aktif';
+        badge.className = appState.callState.isMuted ? 'text-[8px] text-red-400 font-mono text-center' : 'text-[8px] text-emerald-400 font-mono text-center';
+      }
+    }
+
+    function toggleCallSpeaker() {
+      appState.callState.speakerOn = !appState.callState.speakerOn;
+      const btn = document.getElementById('btn-call-speaker');
+      if (btn) {
+        btn.innerHTML = appState.callState.speakerOn ? '🔊' : '🔈';
+      }
+    }
+
+    function switchCallCamera() {
+      const views = [
+        { 
+          title: 'Kamera Belakang Scout: Sudut Kamar & Jendela Luar', 
+          desc: 'Ventilasi udara terbuka menghadap taman, sinar matahari masuk optimal.', 
+          tag: 'Jendela & Ventilasi Lolos ✓',
+          icon: '🪟'
+        },
+        { 
+          title: 'Kamera Belakang Scout: Kamar Mandi & Uji Debit Air', 
+          desc: 'Debit air shower 9.2 L/min, air sumur jernih tanpa endapan & tidak berbau.', 
+          tag: 'Debit Air: 9.2 L/m ✓',
+          icon: '💧'
+        },
+        { 
+          title: 'Kamera Belakang Scout: Meja Belajar & Uji Stopkontak', 
+          desc: 'Stopkontak 228V grounding aman untuk laptop, tidak ada induksi setrum.', 
+          tag: '228V Grounding OK ✓',
+          icon: '⚡'
+        },
+        { 
+          title: 'Kamera Depan: Tatap Muka Scout Dimas & Ibu Hj. Ratna', 
+          desc: 'Ibu kost menyapa langsung orang tua dan siap mengunci kamar nomor 08.', 
+          tag: 'Ibu Kost Siap Sambut ✓',
+          icon: '🤝'
+        }
+      ];
+
+      appState.callState.cameraIdx = (appState.callState.cameraIdx + 1) % views.length;
+      const cur = views[appState.callState.cameraIdx];
+
+      const titleEl = document.getElementById('call-camera-title');
+      const descEl = document.getElementById('call-camera-desc');
+      const tagEl = document.getElementById('call-camera-tag');
+      const iconEl = document.getElementById('call-camera-icon');
+
+      if (titleEl) titleEl.textContent = cur.title;
+      if (descEl) descEl.textContent = cur.desc;
+      if (tagEl) tagEl.textContent = cur.tag;
+      if (iconEl) iconEl.textContent = cur.icon;
+    }
+
+    // Scout Dispatch Chat Engine
+    function sendChatMessage() {
+      const input = document.getElementById('chat-input-field');
+      const text = input ? input.value.trim() : '';
+      if (!text) return;
+      appendChatMessage(text, 'user');
+      input.value = '';
+
+      setTimeout(() => {
+        appendChatMessage('Siap kak! Sudah saya catat. Begitu sampai langsung saya prioritaskan cek poin tersebut ya.', 'scout');
+      }, 1000);
+    }
+
+    function sendQuickReply(text) {
+      appendChatMessage(text, 'user');
+      setTimeout(() => {
+        if (text.includes('ibu kost')) {
+          appendChatMessage('Iya kak, ibu Hj. Ratna sedang ada di ruang tamu kost dan siap ikut video call nanti.', 'scout');
+        } else if (text.includes('Telkomsel')) {
+          appendChatMessage('Siap kak! Nanti saya ukur pakai Speedtest dan kirim screenshot bar sinyal Telkomsel di dalam kamar ya.', 'scout');
+        } else {
+          appendChatMessage('Kunci gerbang dipegang masing-masing anak kos kak, bebas 24 jam dan ada CCTV aktif.', 'scout');
+        }
+      }, 1000);
+    }
+
+    function appendChatMessage(text, sender) {
+      const container = document.getElementById('chat-messages-container');
+      if (!container) return;
+
+      const now = new Date();
+      const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+
+      const msgDiv = document.createElement('div');
+      if (sender === 'user') {
+        msgDiv.className = 'flex items-start justify-end gap-2 ml-auto max-w-[85%]';
+        msgDiv.innerHTML = `
+          <div class="bg-gojek-green text-white p-3 rounded-2xl rounded-tr-xs shadow-2xs space-y-1">
+            <p>${text}</p>
+            <span class="text-[9px] text-emerald-200 block text-right font-mono">${timeStr} ✓✓</span>
+          </div>
+        `;
+      } else {
+        msgDiv.className = 'flex items-start gap-2 max-w-[85%]';
+        msgDiv.innerHTML = `
+          <div class="w-6 h-6 rounded-full bg-gojek-green text-white text-[10px] font-bold flex items-center justify-center shrink-0">
+            DP
+          </div>
+          <div class="bg-white p-3 rounded-2xl rounded-tl-xs border border-gray-200 shadow-2xs space-y-1">
+            <p class="text-gray-800">${text}</p>
+            <span class="text-[9px] text-gray-400 block text-right font-mono">${timeStr}</span>
+          </div>
+        `;
+      }
+
+      container.appendChild(msgDiv);
+      container.scrollTop = container.scrollHeight;
+    }
+
+    // Tanya Kating Mentorship Chat Engine
+    function sendKatingMessage() {
+      const input = document.getElementById('kating-input-field');
+      const text = input ? input.value.trim() : '';
+      if (!text) return;
+      appendKatingChat(text, 'user');
+      input.value = '';
+
+      setTimeout(() => {
+        appendKatingChat('Pertanyaan bagus dek! Di Tembalang kuncinya cek kontur jalan dan posisi toren air kos. Jangan sungkan minta tolong Scout KOSCOUT buat mastiin ya!', 'kating');
+      }, 1000);
+    }
+
+    function askKatingTopic(topic) {
+      const questions = {
+        'banjir': 'Kak, daerah kos Tembalang mana yang paling bebas banjir & deket kampus?',
+        'budget': 'Kalau budget Rp 1 - 1,5 juta di Tembalang dapet fasilitas apa aja ya kak?',
+        'jammalam': 'Kak, rata-rata kos di Tembalang ada jam malam ketat nggak?',
+        'jalan': 'Daerah mana yang beneran bisa jalan kaki ke fakultas Undip tanpa naik motor?'
+      };
+      const answers = {
+        'banjir': 'Daerah Tembalang atas rata-rata tinggi dek, tapi jalanan Banjarsari Selatan & Sirojudin lebih aman dari genangan air hujan lebat dibanding area cekungan bawah.',
+        'budget': 'Budget segitu di area Banjarsari/Sirojudin udah dapet kamar mandi dalam, kasur springbed, lemari, WiFi, dan banyak yang udah include listrik & kipas/AC!',
+        'jammalam': 'Banyak kos di Tembalang yang ngasih kunci gerbang mandiri 24 jam dek, terutama kosan mahasiswa tingkat lanjut. Tapi wajib tanyain apakah gerbang digembok jam 22.00 atau bebas.',
+        'jalan': 'Kalau kuliah di FT/FEB, cari kos di sepanjang Jl. Sirojudin atau Gang Timoho dek, cuma 5-10 menit jalan kaki ke gerbang kampus!'
+      };
+
+      appendKatingChat(questions[topic] || 'Kak mau tanya rekomendasi kos dong', 'user');
+      setTimeout(() => {
+        appendKatingChat(answers[topic] || 'Siap dek, tanyakan saja kebutuhan spesifikmu!', 'kating');
+      }, 900);
+    }
+
+    function appendKatingChat(text, sender) {
+      const container = document.getElementById('kating-messages-container');
+      if (!container) return;
+
+      const now = new Date();
+      const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+
+      const msgDiv = document.createElement('div');
+      if (sender === 'user') {
+        msgDiv.className = 'flex items-start justify-end gap-2 ml-auto max-w-[85%]';
+        msgDiv.innerHTML = `
+          <div class="bg-gojek-green text-white p-3 rounded-2xl rounded-tr-xs shadow-2xs space-y-1">
+            <p>${text}</p>
+            <span class="text-[9px] text-emerald-200 block text-right font-mono">${timeStr} ✓✓</span>
+          </div>
+        `;
+      } else {
+        msgDiv.className = 'flex items-start gap-2 max-w-[85%]';
+        msgDiv.innerHTML = `
+          <div class="w-6 h-6 rounded-full bg-emerald-700 text-white text-[10px] font-bold flex items-center justify-center shrink-0">
+            SB
+          </div>
+          <div class="bg-white p-3 rounded-2xl rounded-tl-xs border border-gray-200 shadow-2xs space-y-1">
+            <div class="text-[10px] font-bold text-emerald-700">Kak Salsabila (FEB '21)</div>
+            <p class="text-gray-800">${text}</p>
+            <span class="text-[9px] text-gray-400 block text-right font-mono">${timeStr}</span>
+          </div>
+        `;
+      }
+
+      container.appendChild(msgDiv);
+      container.scrollTop = container.scrollHeight;
+    }
+
+    function submitMitraForm() {
+      alert('Pendaftaran Mitra Scout Anda Berhasil Diterima! Tim KOSCOUT Tembalang akan menghubungi WhatsApp Anda dalam 1x24 jam untuk verifikasi KTM Undip, motor & briefing SOP.');
+      toggleMitraModal(false);
+    }
+
+    // Initialize Simulator & Hash Routing on Load
+    function checkHashRoute() {
+      const hash = window.location.hash.replace('#', '');
+      if (['website', 'canvas', 'simulator'].includes(hash)) {
+        switchMainView(hash, false);
+      }
+    }
+
+    // Execute immediately
+    try {
+      checkHashRoute();
+      calculateTariff();
+      updateOrderScreenUI();
+    } catch (e) {}
+
+    window.addEventListener('DOMContentLoaded', () => {
+      calculateTariff();
+      updateOrderScreenUI();
+      renderSimulatorScreen(1);
+      checkHashRoute();
+    });
+
+    window.addEventListener('load', () => {
+      checkHashRoute();
+    });
+
+    window.addEventListener('hashchange', () => {
+      checkHashRoute();
+    });
+  </script>
+
+</body>
+</html>

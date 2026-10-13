@@ -1,0 +1,1553 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KOSCOUT.ID — Lo-Fi Wireframe & Interactive Prototype</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Plus Jakarta Sans', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            wire: {
+              50: '#F8FAFC',
+              100: '#F1F5F9',
+              200: '#E2E8F0',
+              300: '#CBD5E1',
+              400: '#94A3B8',
+              500: '#64748B',
+              600: '#475569',
+              700: '#334155',
+              800: '#1E293B',
+              900: '#0F172A',
+            },
+            blueprint: {
+              50: '#EFF6FF',
+              100: '#DBEAFE',
+              500: '#3B82F6',
+              600: '#2563EB',
+              700: '#1D4ED8',
+            },
+            accent: {
+              badge: '#0D9488',
+              alert: '#E11D48',
+              warn: '#D97706',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    /* Lo-Fi Wireframe Specific Aesthetic Elements */
+    .wireframe-box {
+      position: relative;
+      background-color: #F1F5F9;
+      border: 1.5px dashed #CBD5E1;
+      overflow: hidden;
+    }
+    .wireframe-box::before, .wireframe-box::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      pointer-events: none;
+    }
+    .wireframe-box::before {
+      background: linear-gradient(to top right, transparent calc(50% - 1px), #CBD5E1 calc(50% - 1px), #CBD5E1 calc(50% + 1px), transparent calc(50% + 1px));
+    }
+    .wireframe-box::after {
+      background: linear-gradient(to bottom right, transparent calc(50% - 1px), #CBD5E1 calc(50% - 1px), #CBD5E1 calc(50% + 1px), transparent calc(50% + 1px));
+    }
+    .wireframe-box-label {
+      position: absolute;
+      bottom: 6px;
+      right: 6px;
+      font-size: 10px;
+      font-family: 'JetBrains Mono', monospace;
+      background: rgba(255, 255, 255, 0.85);
+      padding: 2px 6px;
+      border-radius: 4px;
+      border: 1px solid #CBD5E1;
+      color: #64748B;
+      z-index: 2;
+    }
+
+    /* Custom Scrollbars */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #F1F5F9;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #CBD5E1;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94A3B8;
+    }
+
+    .phone-mockup-shadow {
+      box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.25), 0 0 0 12px #0F172A, 0 0 0 14px #334155;
+    }
+
+    /* Pulse radar */
+    @keyframes radar-pulse {
+      0% { transform: scale(0.85); opacity: 1; }
+      100% { transform: scale(2.2); opacity: 0; }
+    }
+    .radar-ring {
+      animation: radar-pulse 2.2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+    }
+  </style>
+</head>
+<body class="bg-wire-100 text-wire-800 font-sans min-h-screen antialiased flex flex-col">
+
+  <!-- ========================================================================= -->
+  <!-- TOP GLOBAL CONTROLS & HEADER -->
+  <!-- ========================================================================= -->
+  <header class="bg-white border-b border-wire-300 sticky top-0 z-50 px-4 lg:px-8 py-3.5 shadow-sm">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row md:items-center justify-between gap-4">
+      
+      <!-- Brand & Project Info -->
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-lg bg-wire-900 text-white flex items-center justify-center font-mono font-bold text-lg border-2 border-wire-700">
+          KS
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="text-lg font-bold text-wire-900 tracking-tight">KOSCOUT.ID</h1>
+            <span class="text-xs font-mono uppercase bg-wire-200 text-wire-700 px-2 py-0.5 rounded font-semibold border border-wire-300">
+              Lo-Fi Wireframe v1.2
+            </span>
+          </div>
+          <p class="text-xs text-wire-500">
+            On-Demand Hyperlocal Kost Scouting Platform — Undip Tembalang Hub
+          </p>
+        </div>
+      </div>
+
+      <!-- View Switcher & Actions -->
+      <div class="flex flex-wrap items-center gap-2 sm:gap-3">
+        
+        <!-- View Mode Segmented Control -->
+        <div class="bg-wire-100 p-1 rounded-lg border border-wire-300 flex items-center text-xs font-semibold">
+          <button id="btn-mode-canvas" onclick="switchViewMode('canvas')" class="px-3 py-1.5 rounded-md transition-all flex items-center gap-1.5 bg-white text-wire-900 shadow-sm border border-wire-200">
+            <svg class="w-3.5 h-3.5 text-wire-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+            <span>Artboard Canvas (5 Screens)</span>
+          </button>
+          <button id="btn-mode-sim" onclick="switchViewMode('simulator')" class="px-3 py-1.5 rounded-md transition-all flex items-center gap-1.5 text-wire-600 hover:text-wire-900">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+            <span>Device Simulator</span>
+          </button>
+        </div>
+
+        <!-- Toggle Annotations -->
+        <button id="btn-toggle-notes" onclick="toggleAnnotations()" class="px-3 py-1.5 rounded-lg border border-wire-300 bg-white hover:bg-wire-50 text-xs font-semibold text-wire-700 flex items-center gap-1.5 transition-colors">
+          <span id="notes-indicator" class="w-2 h-2 rounded-full bg-blueprint-500"></span>
+          <span>Anotasi UX: <strong id="notes-status-text">ON</strong></span>
+        </button>
+
+        <!-- 25-Point Protocol Modal Trigger -->
+        <button onclick="toggleProtocolModal(true)" class="px-3 py-1.5 rounded-lg border border-wire-300 bg-wire-900 text-white hover:bg-wire-800 text-xs font-semibold flex items-center gap-1.5 shadow-sm transition-colors">
+          <svg class="w-3.5 h-3.5 text-wire-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+          <span>Standar 25 Poin Audit</span>
+        </button>
+
+      </div>
+    </div>
+  </header>
+
+  <!-- ========================================================================= -->
+  <!-- MAIN CONTAINER -->
+  <!-- ========================================================================= -->
+  <main class="flex-1 overflow-x-auto p-4 lg:p-8">
+
+    <!-- ======================================================================= -->
+    <!-- VIEW MODE 1: ARTBOARD CANVAS (5 LAYAR BERDERET & ALUR PROSES) -->
+    <!-- ======================================================================= -->
+    <div id="canvas-view" class="w-full">
+
+      <!-- Board Summary Bar -->
+      <div class="max-w-7xl mx-auto mb-6 bg-white p-4 rounded-xl border border-wire-300 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="text-xs font-mono font-bold bg-blueprint-100 text-blueprint-700 px-2 py-0.5 rounded">USER JOURNEY ARCHITECTURE</span>
+            <span class="text-xs text-wire-400">•</span>
+            <span class="text-xs text-wire-600 font-medium">5 Layar Inti Transaksi End-to-End</span>
+          </div>
+          <p class="text-sm text-wire-700 font-semibold mt-1">
+            Alur: Penemuan & Pemilihan Paket &rarr; Input Kriteria Audit &rarr; Penugasan Mitra Scout &rarr; Laporan 25 Poin &rarr; Escrow DP Anti-Scam
+          </p>
+        </div>
+        <div class="flex items-center gap-3 text-xs text-wire-500 font-mono">
+          <span class="flex items-center gap-1.5"><span class="w-3 h-3 bg-wire-200 border border-wire-400 rounded"></span> Wireframe State</span>
+          <span class="flex items-center gap-1.5"><span class="w-3 h-3 bg-blueprint-100 border border-blueprint-500 rounded"></span> Interactive Area</span>
+          <span class="flex items-center gap-1.5"><span class="w-3 h-3 bg-wire-800 rounded"></span> Primary CTA</span>
+        </div>
+      </div>
+
+      <!-- Horizontal Flow Artboard Container -->
+      <div class="flex items-start gap-8 min-w-max pb-8 px-2">
+
+        <!-- =================================================================== -->
+        <!-- SCREEN 1: BERANDA / DISCOVERY -->
+        <!-- =================================================================== -->
+        <div class="flex flex-col items-center">
+          <div class="mb-3 flex items-center justify-between w-[375px] px-1">
+            <div class="flex items-center gap-2">
+              <span class="w-6 h-6 rounded-full bg-wire-900 text-white text-xs font-mono flex items-center justify-center font-bold">1</span>
+              <span class="text-sm font-bold text-wire-900">Screen 01: Beranda & Discovery</span>
+            </div>
+            <span class="text-xs font-mono text-wire-500">home.html</span>
+          </div>
+
+          <!-- Mobile Phone Shell -->
+          <div class="w-[375px] h-[780px] bg-white rounded-[36px] border-[8px] border-wire-800 shadow-xl overflow-hidden flex flex-col relative">
+            <!-- Screen Notch / Status Bar -->
+            <div class="h-8 bg-wire-900 text-white px-5 flex items-center justify-between text-[11px] font-mono tracking-tight shrink-0 select-none">
+              <span>09:41</span>
+              <div class="w-20 h-4 bg-black rounded-full mx-auto"></div>
+              <div class="flex items-center gap-1.5">
+                <span>5G</span>
+                <span>100%</span>
+              </div>
+            </div>
+
+            <!-- Screen Content (Scrollable) -->
+            <div class="flex-1 overflow-y-auto bg-white p-4 space-y-4">
+              
+              <!-- Location Header & Profile -->
+              <div class="flex items-center justify-between border-b border-wire-200 pb-3">
+                <div>
+                  <div class="text-[10px] uppercase font-mono font-bold text-wire-400">Lokasi Penugasan</div>
+                  <div class="flex items-center gap-1 font-bold text-xs text-wire-800">
+                    <svg class="w-3.5 h-3.5 text-blueprint-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                    <span>Tembalang, Semarang (Undip)</span>
+                    <svg class="w-3 h-3 text-wire-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                  </div>
+                </div>
+                <div class="flex items-center gap-2">
+                  <div class="w-7 h-7 rounded-full bg-wire-100 border border-wire-300 flex items-center justify-center">
+                    <svg class="w-3.5 h-3.5 text-wire-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
+                  </div>
+                  <div class="w-7 h-7 rounded-full bg-wire-200 border border-wire-400 flex items-center justify-center font-bold text-[10px] text-wire-700">
+                    JD
+                  </div>
+                </div>
+              </div>
+
+              <!-- Hero Banner (Lo-Fi Wireframe Box) -->
+              <div class="border-2 border-wire-800 rounded-xl p-3.5 bg-wire-50 space-y-2">
+                <div class="flex items-center gap-1.5">
+                  <span class="text-[9px] font-mono uppercase bg-wire-800 text-white px-1.5 py-0.5 rounded font-bold">Hyperlocal Scout</span>
+                  <span class="text-[9px] font-mono text-wire-500">100% Unbiased</span>
+                </div>
+                <h2 class="text-sm font-extrabold text-wire-900 leading-snug">
+                  Cari Kos Tanpa Boncos Tiket & Tipu-Tipu
+                </h2>
+                <p class="text-[11px] text-wire-600 leading-relaxed">
+                  Suruh mahasiswa senior terjun langsung inspeksi air, WiFi, sinyal & live video call 45 menit.
+                </p>
+                <button onclick="goToScreenInSimulator(2)" class="w-full py-2 bg-wire-900 text-white rounded-lg text-xs font-bold flex items-center justify-center gap-1 hover:bg-wire-800 transition-colors">
+                  <span>Pesan Scout Sekarang</span>
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                </button>
+              </div>
+
+              <!-- Package Options Header -->
+              <div>
+                <div class="flex items-center justify-between mb-2">
+                  <span class="text-xs font-bold text-wire-900">Pilih Paket Layanan</span>
+                  <span class="text-[10px] text-blueprint-600 font-semibold font-mono">Bandingkan &rarr;</span>
+                </div>
+
+                <!-- Package 1: Single Scout -->
+                <div class="border border-wire-300 rounded-xl p-3 mb-2 hover:border-wire-500 transition-all bg-white">
+                  <div class="flex justify-between items-start">
+                    <div>
+                      <span class="text-[9px] font-mono uppercase bg-wire-100 text-wire-600 px-1.5 py-0.5 rounded font-bold border border-wire-200">QUICK CHECK</span>
+                      <h4 class="text-xs font-bold text-wire-800 mt-1">Single Scout</h4>
+                      <p class="text-[10px] text-wire-500">1 Titik Kos Target Spesifik</p>
+                    </div>
+                    <div class="text-right">
+                      <div class="text-xs font-extrabold text-wire-900">Rp 39.000</div>
+                      <div class="text-[9px] text-wire-400">/survei</div>
+                    </div>
+                  </div>
+                  <div class="mt-2 pt-2 border-t border-wire-100 text-[10px] text-wire-600 space-y-0.5">
+                    <div>✓ Verifikasi ketersediaan kamar riil</div>
+                    <div>✓ Video walkthrough 2-3 menit</div>
+                    <div>✓ SLA selesai &lt; 24 jam</div>
+                  </div>
+                </div>
+
+                <!-- Package 2: Triple Bundle (HIGHLIGHTED) -->
+                <div class="border-2 border-blueprint-600 rounded-xl p-3 mb-2 bg-blueprint-50/40 relative">
+                  <div class="absolute -top-2.5 right-3 bg-blueprint-600 text-white text-[9px] font-bold px-2 py-0.5 rounded-full font-mono uppercase">
+                    Paling Populer
+                  </div>
+                  <div class="flex justify-between items-start">
+                    <div>
+                      <span class="text-[9px] font-mono uppercase bg-blueprint-100 text-blueprint-700 px-1.5 py-0.5 rounded font-bold">BEST VALUE</span>
+                      <h4 class="text-xs font-bold text-wire-900 mt-1">Triple Scout Bundle</h4>
+                      <p class="text-[10px] text-wire-600">3 Titik Kos dalam 1 Zonasi</p>
+                    </div>
+                    <div class="text-right">
+                      <div class="text-xs font-extrabold text-blueprint-700">Rp 99.000</div>
+                      <div class="text-[9px] text-wire-400">/bundle 3 kos</div>
+                    </div>
+                  </div>
+                  <div class="mt-2 pt-2 border-t border-blueprint-200 text-[10px] text-wire-700 space-y-0.5">
+                    <div>✓ <strong>Audit Lengkap 25 Poin</strong> (Air, WiFi, Sinyal)</div>
+                    <div>✓ Tabel perbandingan plus-minus 3 kos</div>
+                    <div>✓ Rekomendasi kating senior terpercaya</div>
+                  </div>
+                </div>
+
+                <!-- Package 3: VIP Mandiri Rush -->
+                <div class="border border-wire-300 rounded-xl p-3 bg-white">
+                  <div class="flex justify-between items-start">
+                    <div>
+                      <span class="text-[9px] font-mono uppercase bg-wire-100 text-wire-700 px-1.5 py-0.5 rounded font-bold border border-wire-200">SOLUSI DARURAT MABA</span>
+                      <h4 class="text-xs font-bold text-wire-800 mt-1">VIP Mandiri Rush</h4>
+                      <p class="text-[10px] text-wire-500">Hingga 5 Kos + Live Call + Escrow</p>
+                    </div>
+                    <div class="text-right">
+                      <div class="text-xs font-extrabold text-wire-900">Rp 229.000</div>
+                      <div class="text-[9px] text-wire-400">prioritas kilat</div>
+                    </div>
+                  </div>
+                  <div class="mt-2 pt-2 border-t border-wire-100 text-[10px] text-wire-600 space-y-0.5">
+                    <div>✓ <strong>Fast-Track SLA &lt; 12 Jam</strong></div>
+                    <div>✓ Live Interactive Video Call (30-45 mnt)</div>
+                    <div>✓ Gratis Escrow Shield Booking DP</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Campus Zone Chips -->
+              <div>
+                <div class="text-xs font-bold text-wire-800 mb-1.5">Zonasi Kampus Tembalang</div>
+                <div class="flex flex-wrap gap-1.5">
+                  <span class="px-2 py-1 bg-wire-900 text-white rounded-md text-[10px] font-semibold">Sirojudin</span>
+                  <span class="px-2 py-1 bg-wire-100 border border-wire-300 text-wire-700 rounded-md text-[10px]">Banjarsari</span>
+                  <span class="px-2 py-1 bg-wire-100 border border-wire-300 text-wire-700 rounded-md text-[10px]">Bulusan</span>
+                  <span class="px-2 py-1 bg-wire-100 border border-wire-300 text-wire-700 rounded-md text-[10px]">Gondang</span>
+                  <span class="px-2 py-1 bg-wire-100 border border-wire-300 text-wire-700 rounded-md text-[10px]">Tirto Agung</span>
+                </div>
+              </div>
+
+              <!-- Live Activity Ticker (Social Proof) -->
+              <div class="bg-wire-100 border border-wire-200 rounded-lg p-2 flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-accent-badge animate-ping shrink-0"></span>
+                <p class="text-[10px] text-wire-600 truncate">
+                  <strong>Scout Fikri (FT '22)</strong> baru saja menyelesaikan audit di Kos Banjarsari
+                </p>
+              </div>
+
+            </div>
+
+            <!-- Bottom Navigation Bar -->
+            <div class="h-14 bg-white border-t border-wire-200 px-6 flex items-center justify-between shrink-0">
+              <div class="flex flex-col items-center gap-0.5 text-wire-900">
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
+                <span class="text-[9px] font-bold">Beranda</span>
+              </div>
+              <div onclick="goToScreenInSimulator(2)" class="flex flex-col items-center gap-0.5 text-wire-400 cursor-pointer hover:text-wire-700">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
+                <span class="text-[9px]">Order</span>
+              </div>
+              <div onclick="goToScreenInSimulator(4)" class="flex flex-col items-center gap-0.5 text-wire-400 cursor-pointer hover:text-wire-700">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                <span class="text-[9px]">Laporan</span>
+              </div>
+              <div onclick="goToScreenInSimulator(5)" class="flex flex-col items-center gap-0.5 text-wire-400 cursor-pointer hover:text-wire-700">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                <span class="text-[9px]">Escrow</span>
+              </div>
+              <div class="flex flex-col items-center gap-0.5 text-wire-400">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                <span class="text-[9px]">Profil</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Screen Annotation Box -->
+          <div class="ux-annotation mt-4 w-[375px] bg-white border border-wire-300 rounded-xl p-3.5 shadow-sm text-xs space-y-1.5">
+            <div class="flex items-center justify-between">
+              <span class="font-mono font-bold text-[10px] text-blueprint-600 uppercase">Anotasi UX #01</span>
+              <span class="text-[10px] bg-wire-100 px-1.5 py-0.5 rounded text-wire-600">Decision Framing</span>
+            </div>
+            <p class="text-wire-700 leading-relaxed font-medium">
+              <strong>Tujuan Utama:</strong> Membangun kepercayaan seketika (*instant trust*) bagi maba/ortu luar kota.
+            </p>
+            <ul class="list-disc list-inside text-wire-500 space-y-1 text-[11px]">
+              <li>Paket <strong>Triple Bundle (Rp 99k)</strong> ditempatkan sebagai anchor harga (*decoy effect* terhadap tiket pesawat Rp 1,5 jt).</li>
+              <li>Ticker aktivitas live memberikan sinyal sosial bahwa mahasiswa lokal aktif beroperasi saat itu juga.</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Flow Arrow -->
+        <div class="self-center pt-24 hidden lg:flex flex-col items-center text-wire-400">
+          <span class="text-[10px] font-mono font-bold mb-1">PILIH PAKET</span>
+          <svg class="w-8 h-8 text-wire-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+        </div>
+
+        <!-- =================================================================== -->
+        <!-- SCREEN 2: ORDER & KRITERIA PENCARIAN -->
+        <!-- =================================================================== -->
+        <div class="flex flex-col items-center">
+          <div class="mb-3 flex items-center justify-between w-[375px] px-1">
+            <div class="flex items-center gap-2">
+              <span class="w-6 h-6 rounded-full bg-wire-900 text-white text-xs font-mono flex items-center justify-center font-bold">2</span>
+              <span class="text-sm font-bold text-wire-900">Screen 02: Kriteria & Filter</span>
+            </div>
+            <span class="text-xs font-mono text-wire-500">order_criteria.html</span>
+          </div>
+
+          <!-- Mobile Phone Shell -->
+          <div class="w-[375px] h-[780px] bg-white rounded-[36px] border-[8px] border-wire-800 shadow-xl overflow-hidden flex flex-col relative">
+            <!-- Screen Notch / Status Bar -->
+            <div class="h-8 bg-wire-900 text-white px-5 flex items-center justify-between text-[11px] font-mono tracking-tight shrink-0 select-none">
+              <span>09:42</span>
+              <div class="w-20 h-4 bg-black rounded-full mx-auto"></div>
+              <div class="flex items-center gap-1.5">
+                <span>5G</span>
+                <span>100%</span>
+              </div>
+            </div>
+
+            <!-- Screen Header -->
+            <div class="p-3.5 border-b border-wire-200 flex items-center justify-between bg-white shrink-0">
+              <div class="flex items-center gap-2">
+                <button onclick="goToScreenInSimulator(1)" class="w-7 h-7 rounded-full bg-wire-100 flex items-center justify-center text-wire-700 hover:bg-wire-200">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                </button>
+                <h3 class="text-xs font-bold text-wire-900">Kriteria & Titik Kos</h3>
+              </div>
+              <span class="text-[10px] font-mono text-blueprint-600 font-bold bg-blueprint-50 px-2 py-0.5 rounded border border-blueprint-200">Paket Rp 99k</span>
+            </div>
+
+            <!-- Stepper Indicator -->
+            <div class="bg-wire-50 px-4 py-2 border-b border-wire-200 flex items-center justify-between text-[10px] font-mono">
+              <div class="flex items-center gap-1 text-wire-900 font-bold">
+                <span class="w-4 h-4 rounded-full bg-wire-900 text-white flex items-center justify-center text-[9px]">1</span>
+                <span>Kriteria</span>
+              </div>
+              <div class="w-6 h-0.5 bg-wire-300"></div>
+              <div class="flex items-center gap-1 text-wire-400">
+                <span class="w-4 h-4 rounded-full bg-wire-200 text-wire-600 flex items-center justify-center text-[9px]">2</span>
+                <span>Titik Kos</span>
+              </div>
+              <div class="w-6 h-0.5 bg-wire-300"></div>
+              <div class="flex items-center gap-1 text-wire-400">
+                <span class="w-4 h-4 rounded-full bg-wire-200 text-wire-600 flex items-center justify-center text-[9px]">3</span>
+                <span>Review</span>
+              </div>
+            </div>
+
+            <!-- Screen Content (Scrollable) -->
+            <div class="flex-1 overflow-y-auto bg-white p-4 space-y-4">
+              
+              <!-- Target Kos Mode Selector (Tabs) -->
+              <div>
+                <label class="text-[11px] font-bold text-wire-800 block mb-1.5">Metode Penentuan Kos</label>
+                <div class="grid grid-cols-2 gap-1.5 bg-wire-100 p-1 rounded-lg border border-wire-200 text-[11px] font-semibold">
+                  <button class="py-1.5 bg-white text-wire-900 rounded shadow-sm border border-wire-200">Saya Ada Target</button>
+                  <button class="py-1.5 text-wire-500 hover:text-wire-900">Scout Rekomendasi</button>
+                </div>
+              </div>
+
+              <!-- Target URL / Link Input -->
+              <div class="space-y-1.5">
+                <label class="text-[11px] font-bold text-wire-800 flex justify-between">
+                  <span>Input Link / Nama Kos Target (1 dari 3)</span>
+                  <span class="text-[10px] text-wire-400 font-mono">Opsional</span>
+                </label>
+                <div class="border border-wire-300 rounded-lg p-2 bg-wire-50 flex items-center gap-2">
+                  <svg class="w-3.5 h-3.5 text-wire-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path></svg>
+                  <input type="text" readonly value="https://instagram.com/p/C7X... (Kos Wisma Melati)" class="w-full bg-transparent text-[11px] text-wire-700 outline-none">
+                </div>
+                <p class="text-[9px] text-wire-400">Bisa masukkan link Instagram, Mamikos, atau share loc Maps.</p>
+              </div>
+
+              <!-- Campus Faculty / Hub -->
+              <div>
+                <label class="text-[11px] font-bold text-wire-800 block mb-1.5">Fakultas / Lokasi Prioritas</label>
+                <select class="w-full border border-wire-300 rounded-lg p-2 text-xs bg-wire-50 text-wire-800 font-medium">
+                  <option>Fakultas Teknik (FT Undip) - Radius &lt; 1 Km</option>
+                  <option>FEB Undip - Radius &lt; 1 Km</option>
+                  <option>FKM / FK Undip</option>
+                  <option>Polines Tembalang</option>
+                </select>
+              </div>
+
+              <!-- Gender Kos Radio -->
+              <div>
+                <label class="text-[11px] font-bold text-wire-800 block mb-1.5">Tipe Penghuni</label>
+                <div class="grid grid-cols-3 gap-2 text-xs">
+                  <div class="border-2 border-wire-900 bg-wire-50 rounded-lg p-2 text-center font-bold text-wire-900 cursor-pointer">
+                    Putri
+                  </div>
+                  <div class="border border-wire-300 rounded-lg p-2 text-center text-wire-600 hover:bg-wire-50 cursor-pointer">
+                    Putra
+                  </div>
+                  <div class="border border-wire-300 rounded-lg p-2 text-center text-wire-600 hover:bg-wire-50 cursor-pointer">
+                    Campur
+                  </div>
+                </div>
+              </div>
+
+              <!-- Budget Range Slider -->
+              <div>
+                <div class="flex justify-between text-[11px] mb-1">
+                  <span class="font-bold text-wire-800">Budget Sewa Maksimal</span>
+                  <span class="font-mono font-bold text-blueprint-600">Rp 1.500.000 / bln</span>
+                </div>
+                <input type="range" class="w-full accent-wire-900 bg-wire-200 h-1.5 rounded-lg cursor-pointer" min="600" max="3000" value="1500">
+                <div class="flex justify-between text-[9px] text-wire-400 font-mono mt-1">
+                  <span>Rp 600 rb</span>
+                  <span>Rp 3 jt+</span>
+                </div>
+              </div>
+
+              <!-- 25-Point Checklist Must-Haves -->
+              <div class="border border-wire-200 rounded-xl p-3 bg-wire-50/70 space-y-2">
+                <div class="flex items-center justify-between">
+                  <span class="text-[11px] font-bold text-wire-900">Filter Wajib (25-Point Checklist)</span>
+                  <span class="text-[9px] font-mono bg-wire-200 text-wire-700 px-1.5 py-0.5 rounded">Standardized</span>
+                </div>
+                <div class="space-y-1.5 text-[11px] text-wire-700">
+                  <label class="flex items-center gap-2 cursor-pointer">
+                    <input type="checkbox" checked class="rounded border-wire-300 text-wire-900 focus:ring-0">
+                    <span>Air Tanah Jernih & Bebas Bau Karat (Kritis)</span>
+                  </label>
+                  <label class="flex items-center gap-2 cursor-pointer">
+                    <input type="checkbox" checked class="rounded border-wire-300 text-wire-900 focus:ring-0">
+                    <span>WiFi Stabil & Sinyal HP Telkomsel/ISAT</span>
+                  </label>
+                  <label class="flex items-center gap-2 cursor-pointer">
+                    <input type="checkbox" checked class="rounded border-wire-300 text-wire-900 focus:ring-0">
+                    <span>Kamar Mandi Dalam & Kloset Duduk</span>
+                  </label>
+                  <label class="flex items-center gap-2 cursor-pointer">
+                    <input type="checkbox" class="rounded border-wire-300 text-wire-900 focus:ring-0">
+                    <span>Parkir Mobil Tersedia (Gerbang Gembok)</span>
+                  </label>
+                </div>
+              </div>
+
+              <!-- Special Request Notes -->
+              <div>
+                <label class="text-[11px] font-bold text-wire-800 block mb-1">Catatan Khusus untuk Mitra Scout</label>
+                <textarea readonly rows="2" class="w-full border border-wire-300 rounded-lg p-2 text-[10px] text-wire-600 bg-white resize-none" placeholder="Contoh: Tolong tes debit air shower jam 7 pagi dan cek apakah ibu kos tinggal di satu gedung...">Tolong cek sinyal Telkomsel di dalam kamar & pastikan air sumur tidak bau besi ya kak.</textarea>
+              </div>
+
+            </div>
+
+            <!-- Bottom Action CTA -->
+            <div class="p-3.5 bg-white border-t border-wire-200 shrink-0">
+              <button onclick="goToScreenInSimulator(3)" class="w-full py-2.5 bg-wire-900 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 hover:bg-wire-800 shadow-sm transition-colors">
+                <span>Konfirmasi & Cari Mitra Scout</span>
+                <span class="font-mono font-normal opacity-80">(Rp 99k)</span>
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Screen Annotation Box -->
+          <div class="ux-annotation mt-4 w-[375px] bg-white border border-wire-300 rounded-xl p-3.5 shadow-sm text-xs space-y-1.5">
+            <div class="flex items-center justify-between">
+              <span class="font-mono font-bold text-[10px] text-blueprint-600 uppercase">Anotasi UX #02</span>
+              <span class="text-[10px] bg-wire-100 px-1.5 py-0.5 rounded text-wire-600">Smart Criteria</span>
+            </div>
+            <p class="text-wire-700 leading-relaxed font-medium">
+              <strong>Menghilangkan Hambatan Order:</strong> Calon penyewa tidak dipaksa mencari kos sendiri.
+            </p>
+            <ul class="list-disc list-inside text-wire-500 space-y-1 text-[11px]">
+              <li>Tersedia opsi <em>"Scout Rekomendasikan"</em> untuk menjangkau kos warga lokal yang tidak pasang iklan online.</li>
+              <li>Filter langsung terhubung ke matriks inspeksi 25 poin, menjamin transparansi SLA pengujian lapangan.</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Flow Arrow -->
+        <div class="self-center pt-24 hidden lg:flex flex-col items-center text-wire-400">
+          <span class="text-[10px] font-mono font-bold mb-1">DISPATCH MITRA</span>
+          <svg class="w-8 h-8 text-wire-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+        </div>
+
+        <!-- =================================================================== -->
+        <!-- SCREEN 3: LIVE SCOUT DISPATCH & MATCHING -->
+        <!-- =================================================================== -->
+        <div class="flex flex-col items-center">
+          <div class="mb-3 flex items-center justify-between w-[375px] px-1">
+            <div class="flex items-center gap-2">
+              <span class="w-6 h-6 rounded-full bg-wire-900 text-white text-xs font-mono flex items-center justify-center font-bold">3</span>
+              <span class="text-sm font-bold text-wire-900">Screen 03: Live Scout Matching</span>
+            </div>
+            <span class="text-xs font-mono text-wire-500">scout_dispatch.html</span>
+          </div>
+
+          <!-- Mobile Phone Shell -->
+          <div class="w-[375px] h-[780px] bg-white rounded-[36px] border-[8px] border-wire-800 shadow-xl overflow-hidden flex flex-col relative">
+            <!-- Screen Notch / Status Bar -->
+            <div class="h-8 bg-wire-900 text-white px-5 flex items-center justify-between text-[11px] font-mono tracking-tight shrink-0 select-none">
+              <span>09:48</span>
+              <div class="w-20 h-4 bg-black rounded-full mx-auto"></div>
+              <div class="flex items-center gap-1.5">
+                <span>5G</span>
+                <span>100%</span>
+              </div>
+            </div>
+
+            <!-- Screen Header -->
+            <div class="p-3.5 border-b border-wire-200 flex items-center justify-between bg-white shrink-0">
+              <div class="flex items-center gap-2">
+                <button onclick="goToScreenInSimulator(2)" class="w-7 h-7 rounded-full bg-wire-100 flex items-center justify-center text-wire-700 hover:bg-wire-200">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                </button>
+                <div>
+                  <h3 class="text-xs font-bold text-wire-900">Status Penugasan Scout</h3>
+                  <p class="text-[9px] font-mono text-wire-400">Order ID: #KSC-2026-0881</p>
+                </div>
+              </div>
+              <span class="text-[10px] font-mono bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded border border-emerald-300 flex items-center gap-1">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse"></span>
+                ACTIVE
+              </span>
+            </div>
+
+            <!-- Screen Content (Scrollable) -->
+            <div class="flex-1 overflow-y-auto bg-white p-4 space-y-4">
+              
+              <!-- Radar Map / Geolocation Placeholder -->
+              <div class="relative h-44 rounded-2xl border-2 border-wire-300 bg-wire-100 overflow-hidden flex items-center justify-center">
+                <!-- Grid lines background -->
+                <div class="absolute inset-0 opacity-20 bg-[radial-gradient(#94a3b8_1px,transparent_1px)] [background-size:16px_16px]"></div>
+                
+                <!-- Radar animation -->
+                <div class="absolute w-24 h-24 rounded-full border-2 border-blueprint-500/40 radar-ring"></div>
+                <div class="absolute w-12 h-12 rounded-full border-2 border-blueprint-500/60 radar-ring"></div>
+                
+                <!-- Target Kos Pin -->
+                <div class="absolute top-8 right-16 flex flex-col items-center">
+                  <div class="w-6 h-6 rounded-full bg-wire-900 text-white flex items-center justify-center text-[9px] font-mono font-bold shadow-md">
+                    K1
+                  </div>
+                  <span class="text-[8px] font-mono bg-white px-1 rounded shadow text-wire-800 border border-wire-200 mt-0.5">Wisma Melati</span>
+                </div>
+
+                <!-- Scout Moving Pin -->
+                <div class="relative flex flex-col items-center z-10">
+                  <div class="w-9 h-9 rounded-full bg-blueprint-600 text-white flex items-center justify-center shadow-lg border-2 border-white">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                  </div>
+                  <div class="text-[9px] font-mono font-bold bg-wire-900 text-white px-1.5 py-0.5 rounded shadow mt-1">
+                    Scout Fikri (ETA 8 mnt)
+                  </div>
+                </div>
+
+                <div class="absolute bottom-2 left-2 text-[9px] font-mono bg-white/90 px-2 py-0.5 rounded border border-wire-300 text-wire-600">
+                  Zonasi: Jl. Banjarsari, Tembalang
+                </div>
+              </div>
+
+              <!-- Matched Scout Card -->
+              <div class="border-2 border-wire-800 rounded-xl p-3 bg-wire-50 space-y-2.5">
+                <div class="flex items-center justify-between">
+                  <span class="text-[9px] font-mono uppercase bg-wire-200 text-wire-800 px-1.5 py-0.5 rounded font-bold">MITRA SCOUT TERVERIFIKASI</span>
+                  <div class="flex items-center gap-1 text-[11px] font-bold text-wire-800">
+                    <span class="text-amber-500">★</span>
+                    <span>4.9</span>
+                    <span class="text-wire-400 font-normal text-[10px]">(148 audit)</span>
+                  </div>
+                </div>
+
+                <div class="flex items-center gap-3">
+                  <!-- Wireframe Avatar -->
+                  <div class="w-12 h-12 rounded-full border-2 border-wire-400 bg-wire-200 flex items-center justify-center font-bold text-sm text-wire-700 shrink-0">
+                    FR
+                  </div>
+                  <div>
+                    <h4 class="text-xs font-bold text-wire-900">Fikri Ramadhan</h4>
+                    <p class="text-[10px] text-wire-600">Teknik Perkapalan Undip '22 (Kating Tembalang)</p>
+                    <div class="flex items-center gap-1.5 mt-1">
+                      <span class="text-[8px] font-mono bg-emerald-100 text-emerald-800 px-1.5 py-0.5 rounded font-bold">✓ KTM Aktif</span>
+                      <span class="text-[8px] font-mono bg-blueprint-100 text-blueprint-800 px-1.5 py-0.5 rounded font-bold">Pakta Integritas</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="bg-white p-2 rounded-lg border border-wire-200 text-[10px] text-wire-600 italic">
+                  "Halo kak! Saya sudah dekat lokasi Kos Wisma Melati di Banjarsari. Sebentar lagi saya mulai tes air & speedtest WiFi ya."
+                </div>
+
+                <!-- Scout Contact Actions -->
+                <div class="grid grid-cols-2 gap-2 pt-1">
+                  <button class="py-1.5 bg-white border border-wire-300 rounded-lg text-[11px] font-bold text-wire-800 flex items-center justify-center gap-1.5 hover:bg-wire-100">
+                    <svg class="w-3.5 h-3.5 text-wire-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
+                    <span>Chat In-App</span>
+                  </button>
+                  <button class="py-1.5 bg-wire-900 text-white rounded-lg text-[11px] font-bold flex items-center justify-center gap-1.5 hover:bg-wire-800">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                    <span>Live Video Call</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Live Timeline / Progress Stepper -->
+              <div class="border border-wire-200 rounded-xl p-3 bg-white space-y-2">
+                <div class="text-[11px] font-bold text-wire-900 mb-2">Timeline Pelaksanaan di Lapangan</div>
+                
+                <div class="space-y-3 relative pl-5 before:content-[''] before:absolute before:left-2 before:top-2 before:bottom-2 before:w-0.5 before:bg-wire-200">
+                  
+                  <!-- Step 1: Done -->
+                  <div class="relative">
+                    <div class="absolute -left-5 top-0.5 w-3.5 h-3.5 rounded-full bg-wire-900 text-white flex items-center justify-center text-[8px]">✓</div>
+                    <div class="text-[11px] font-bold text-wire-800">Order Diterima Sistem</div>
+                    <div class="text-[9px] text-wire-400 font-mono">09:40 WIB — Mitra scout terpadankan</div>
+                  </div>
+
+                  <!-- Step 2: Active -->
+                  <div class="relative">
+                    <div class="absolute -left-5 top-0.5 w-3.5 h-3.5 rounded-full bg-blueprint-600 text-white flex items-center justify-center text-[8px] animate-ping"></div>
+                    <div class="absolute -left-5 top-0.5 w-3.5 h-3.5 rounded-full bg-blueprint-600 text-white flex items-center justify-center text-[8px]">●</div>
+                    <div class="text-[11px] font-bold text-blueprint-700">Scout Menuju Kos Titik 1</div>
+                    <div class="text-[9px] text-wire-500 font-mono">09:48 WIB — ETA tiba dalam 8 menit</div>
+                  </div>
+
+                  <!-- Step 3: Upcoming -->
+                  <div class="relative opacity-50">
+                    <div class="absolute -left-5 top-0.5 w-3.5 h-3.5 rounded-full bg-wire-200 border border-wire-400"></div>
+                    <div class="text-[11px] font-semibold text-wire-600">Inspeksi 25 Poin & Live Walkthrough</div>
+                    <div class="text-[9px] text-wire-400 font-mono">Estimasi durasi: 25 menit di lokasi</div>
+                  </div>
+
+                  <!-- Step 4: Upcoming -->
+                  <div class="relative opacity-50">
+                    <div class="absolute -left-5 top-0.5 w-3.5 h-3.5 rounded-full bg-wire-200 border border-wire-400"></div>
+                    <div class="text-[11px] font-semibold text-wire-600">Laporan Audit Siap & Sesi Review</div>
+                    <div class="text-[9px] text-wire-400 font-mono">Hasil uji air, speedtest WiFi & foto fisik</div>
+                  </div>
+
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Bottom CTA: Preview Next Step (Interactive Trigger) -->
+            <div class="p-3.5 bg-white border-t border-wire-200 shrink-0">
+              <button onclick="goToScreenInSimulator(4)" class="w-full py-2.5 bg-wire-800 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 hover:bg-wire-700 shadow-sm transition-colors">
+                <span>Inspeksi Selesai: Buka Laporan 25 Poin</span>
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Screen Annotation Box -->
+          <div class="ux-annotation mt-4 w-[375px] bg-white border border-wire-300 rounded-xl p-3.5 shadow-sm text-xs space-y-1.5">
+            <div class="flex items-center justify-between">
+              <span class="font-mono font-bold text-[10px] text-blueprint-600 uppercase">Anotasi UX #03</span>
+              <span class="text-[10px] bg-wire-100 px-1.5 py-0.5 rounded text-wire-600">Live Trust Building</span>
+            </div>
+            <p class="text-wire-700 leading-relaxed font-medium">
+              <strong>Menghilangkan Kecemasan (*Anxiety Relief*):</strong> Maba & orang tua di kampung dapat melihat status pergerakan scout secara riil.
+            </p>
+            <ul class="list-disc list-inside text-wire-500 space-y-1 text-[11px]">
+              <li>Profil scout mencantumkan prodi, angkatan, serta status pakta integritas bebas gratifikasi calo.</li>
+              <li>Tersedia tombol satu-klik untuk <em>Live Video Walkthrough</em> langsung bersama orang tua calon mahasiswa.</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Flow Arrow -->
+        <div class="self-center pt-24 hidden lg:flex flex-col items-center text-wire-400">
+          <span class="text-[10px] font-mono font-bold mb-1">AUDIT SELESAI</span>
+          <svg class="w-8 h-8 text-wire-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+        </div>
+
+        <!-- =================================================================== -->
+        <!-- SCREEN 4: 25-POINT AUDIT REPORT & COMPARISON -->
+        <!-- =================================================================== -->
+        <div class="flex flex-col items-center">
+          <div class="mb-3 flex items-center justify-between w-[375px] px-1">
+            <div class="flex items-center gap-2">
+              <span class="w-6 h-6 rounded-full bg-wire-900 text-white text-xs font-mono flex items-center justify-center font-bold">4</span>
+              <span class="text-sm font-bold text-wire-900">Screen 04: Laporan 25 Poin</span>
+            </div>
+            <span class="text-xs font-mono text-wire-500">audit_report.html</span>
+          </div>
+
+          <!-- Mobile Phone Shell -->
+          <div class="w-[375px] h-[780px] bg-white rounded-[36px] border-[8px] border-wire-800 shadow-xl overflow-hidden flex flex-col relative">
+            <!-- Screen Notch / Status Bar -->
+            <div class="h-8 bg-wire-900 text-white px-5 flex items-center justify-between text-[11px] font-mono tracking-tight shrink-0 select-none">
+              <span>10:30</span>
+              <div class="w-20 h-4 bg-black rounded-full mx-auto"></div>
+              <div class="flex items-center gap-1.5">
+                <span>5G</span>
+                <span>98%</span>
+              </div>
+            </div>
+
+            <!-- Screen Header -->
+            <div class="p-3.5 border-b border-wire-200 flex items-center justify-between bg-white shrink-0">
+              <div class="flex items-center gap-2">
+                <button onclick="goToScreenInSimulator(3)" class="w-7 h-7 rounded-full bg-wire-100 flex items-center justify-center text-wire-700 hover:bg-wire-200">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                </button>
+                <div>
+                  <h3 class="text-xs font-bold text-wire-900">Laporan Inspeksi Fisik</h3>
+                  <p class="text-[9px] text-wire-500 font-mono">Auditor: Scout Fikri (FT '22)</p>
+                </div>
+              </div>
+              <button class="w-7 h-7 rounded-full bg-wire-100 flex items-center justify-center text-wire-700 hover:bg-wire-200">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"></path></svg>
+              </button>
+            </div>
+
+            <!-- Screen Content (Scrollable) -->
+            <div class="flex-1 overflow-y-auto bg-white p-4 space-y-4">
+              
+              <!-- Target Kos Header & Score Card -->
+              <div class="border-2 border-wire-900 rounded-2xl p-3.5 bg-wire-50 space-y-2.5">
+                <div class="flex justify-between items-start">
+                  <div>
+                    <span class="text-[9px] font-mono uppercase bg-wire-200 text-wire-800 px-1.5 py-0.5 rounded font-bold">KOS TITIK #1</span>
+                    <h3 class="text-sm font-extrabold text-wire-900 mt-1">Kos Wisma Melati</h3>
+                    <p class="text-[10px] text-wire-500">Jl. Banjarsari No. 14, Tembalang (550m ke FT)</p>
+                  </div>
+                  <!-- Overall Score Badge -->
+                  <div class="text-center bg-white p-2 rounded-xl border-2 border-emerald-600 shadow-sm shrink-0">
+                    <div class="text-base font-extrabold text-emerald-700 font-mono leading-none">88</div>
+                    <div class="text-[8px] font-mono text-wire-500 uppercase mt-0.5">/ 100 SKOR</div>
+                  </div>
+                </div>
+
+                <div class="bg-emerald-50 border border-emerald-200 p-2 rounded-lg text-[10px] text-emerald-800 font-medium flex items-center gap-1.5">
+                  <span class="font-bold">✓ Rekomendasi Scout:</span>
+                  <span>Sangat direkomendasikan untuk maba FT Undip. Air tanah bersih dan sinyal sangat stabil.</span>
+                </div>
+
+                <!-- Price & Room Availability Verified -->
+                <div class="grid grid-cols-2 gap-2 pt-1 border-t border-wire-200 text-[10px]">
+                  <div>
+                    <span class="text-wire-400 block font-mono text-[9px]">Sewa Bulanan Riil:</span>
+                    <span class="font-extrabold text-wire-800 text-xs">Rp 1.200.000 / bln</span>
+                  </div>
+                  <div>
+                    <span class="text-wire-400 block font-mono text-[9px]">Ketersediaan Kamar:</span>
+                    <span class="font-bold text-emerald-700">Tersedia (Kamar 07, Lt. 2)</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Media Evidence Wireframe Placeholder (Walkthrough 360 & Photos) -->
+              <div>
+                <div class="flex items-center justify-between text-xs font-bold text-wire-800 mb-1.5">
+                  <span>Dokumentasi Fisik Hari H</span>
+                  <span class="text-[10px] font-mono text-blueprint-600">6 Foto • 1 Video HD</span>
+                </div>
+                <div class="grid grid-cols-3 gap-2">
+                  <div class="wireframe-box h-20 rounded-lg">
+                    <span class="wireframe-box-label">Uji Air</span>
+                  </div>
+                  <div class="wireframe-box h-20 rounded-lg">
+                    <span class="wireframe-box-label">Speedtest</span>
+                  </div>
+                  <div class="wireframe-box h-20 rounded-lg">
+                    <span class="wireframe-box-label">Kamar Mandi</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 25-Point Breakdown Tabs / Accordions -->
+              <div class="space-y-2">
+                <div class="text-xs font-bold text-wire-800">Rincian Audit 25 Poin Standar</div>
+
+                <!-- Category A: Air & Sanitasi -->
+                <div class="border border-wire-300 rounded-xl p-3 bg-white space-y-1.5">
+                  <div class="flex items-center justify-between">
+                    <span class="text-[11px] font-bold text-wire-900 flex items-center gap-1.5">
+                      <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                      <span>A. Air & Sanitasi (Kritis)</span>
+                    </span>
+                    <span class="text-[9px] font-mono font-bold bg-emerald-100 text-emerald-800 px-1.5 py-0.5 rounded">PASSED (5/5)</span>
+                  </div>
+                  <div class="text-[10px] text-wire-600 space-y-1 pt-1 border-t border-wire-100">
+                    <div class="flex justify-between"><span>Kejernihan & Bau Air:</span> <strong class="text-emerald-700">Jernih, Bebas Bau Karat</strong></div>
+                    <div class="flex justify-between"><span>Tekanan Air Jam Sibuk:</span> <strong>12 Liter / menit (Kencang)</strong></div>
+                    <div class="flex justify-between"><span>Toren Cadangan:</span> <strong>Tersedia (2 x 1.000 L)</strong></div>
+                  </div>
+                </div>
+
+                <!-- Category B: Sinyal & Kelistrikan -->
+                <div class="border border-wire-300 rounded-xl p-3 bg-white space-y-1.5">
+                  <div class="flex items-center justify-between">
+                    <span class="text-[11px] font-bold text-wire-900 flex items-center gap-1.5">
+                      <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                      <span>B. Sinyal & Kelistrikan</span>
+                    </span>
+                    <span class="text-[9px] font-mono font-bold bg-emerald-100 text-emerald-800 px-1.5 py-0.5 rounded">PASSED (5/5)</span>
+                  </div>
+                  <div class="text-[10px] text-wire-600 space-y-1 pt-1 border-t border-wire-100">
+                    <div class="flex justify-between"><span>Speedtest WiFi Kos:</span> <strong class="font-mono text-wire-800">38 Mbps Unduh / 16ms Ping</strong></div>
+                    <div class="flex justify-between"><span>Sinyal Telkomsel 4G:</span> <strong class="text-emerald-700">4 Bar Penuh</strong></div>
+                    <div class="flex justify-between"><span>Sinyal Indosat / XL:</span> <strong>Indosat 4 Bar, XL 2 Bar</strong></div>
+                    <div class="flex justify-between"><span>Stopkontak di Kamar:</span> <strong>3 Titik (Dekat Meja)</strong></div>
+                  </div>
+                </div>
+
+                <!-- Category C: Kamar & Dimensi Riil -->
+                <div class="border border-wire-300 rounded-xl p-3 bg-white space-y-1.5">
+                  <div class="flex items-center justify-between">
+                    <span class="text-[11px] font-bold text-wire-900 flex items-center gap-1.5">
+                      <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+                      <span>C. Dimensi Fisik vs Klaim</span>
+                    </span>
+                    <span class="text-[9px] font-mono font-bold bg-amber-100 text-amber-800 px-1.5 py-0.5 rounded">NOTE (4/5)</span>
+                  </div>
+                  <div class="text-[10px] text-wire-600 space-y-1 pt-1 border-t border-wire-100">
+                    <div class="flex justify-between"><span>Ukuran Riil Kamar:</span> <strong class="text-amber-800 font-mono">3.2m x 3.0m (Iklan klaim 4x4m)</strong></div>
+                    <div class="flex justify-between"><span>Ventilasi & Sinar:</span> <strong>Jendela hadap timur (Matahari pagi masuk)</strong></div>
+                    <div class="flex justify-between"><span>Kondisi Kasur:</span> <strong>Springbed layak & bersih</strong></div>
+                  </div>
+                </div>
+
+                <!-- Category D: Lingkungan & Aturan -->
+                <div class="border border-wire-300 rounded-xl p-3 bg-white space-y-1.5">
+                  <div class="flex items-center justify-between">
+                    <span class="text-[11px] font-bold text-wire-900 flex items-center gap-1.5">
+                      <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                      <span>D. Keamanan & Lingkungan</span>
+                    </span>
+                    <span class="text-[9px] font-mono font-bold bg-emerald-100 text-emerald-800 px-1.5 py-0.5 rounded">PASSED (5/5)</span>
+                  </div>
+                  <div class="text-[10px] text-wire-600 space-y-1 pt-1 border-t border-wire-100">
+                    <div class="flex justify-between"><span>Akses Gerbang:</span> <strong>Gembok kombinasi (Bebas jam malam)</strong></div>
+                    <div class="flex justify-between"><span>Jarak Jalan Kaki ke Undip:</span> <strong>6 Menit ke Gerbang FT</strong></div>
+                    <div class="flex justify-between"><span>Karakter Pemilik:</span> <strong>Ibu kos ramah & tidak tinggal di dalam</strong></div>
+                  </div>
+                </div>
+
+              </div>
+
+            </div>
+
+            <!-- Bottom Actions Bar -->
+            <div class="p-3.5 bg-white border-t border-wire-200 shrink-0 space-y-2">
+              <button onclick="goToScreenInSimulator(5)" class="w-full py-2.5 bg-wire-900 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 hover:bg-wire-800 shadow-sm transition-colors">
+                <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                <span>Cocok? Kunci Kamar via Escrow Shield</span>
+              </button>
+              <div class="flex items-center justify-between text-[10px] text-wire-500 px-1">
+                <button class="hover:text-wire-800 font-semibold underline">Download PDF Laporan</button>
+                <button class="hover:text-wire-800 font-semibold underline">Kirim Laporan ke WhatsApp Ortu</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Screen Annotation Box -->
+          <div class="ux-annotation mt-4 w-[375px] bg-white border border-wire-300 rounded-xl p-3.5 shadow-sm text-xs space-y-1.5">
+            <div class="flex items-center justify-between">
+              <span class="font-mono font-bold text-[10px] text-blueprint-600 uppercase">Anotasi UX #04</span>
+              <span class="text-[10px] bg-wire-100 px-1.5 py-0.5 rounded text-wire-600">Core Deliverable</span>
+            </div>
+            <p class="text-wire-700 leading-relaxed font-medium">
+              <strong>Nilai Nyata Produk (*The Core Value*):</strong> Laporan 25 poin bukan sekadar opini, melainkan audit teknis berbasis data fisik.
+            </p>
+            <ul class="list-disc list-inside text-wire-500 space-y-1 text-[11px]">
+              <li>Mengungkap perbedaan dimensi riil vs iklan (misal klaim 4x4m ternyata 3.2x3m) yang sering menipu maba.</li>
+              <li>Hasil uji air (bau karat) & speedtest sinyal menjawab ketakutan nomor satu orang tua dan mahasiswa.</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Flow Arrow -->
+        <div class="self-center pt-24 hidden lg:flex flex-col items-center text-wire-400">
+          <span class="text-[10px] font-mono font-bold mb-1">LOCK KAMAR</span>
+          <svg class="w-8 h-8 text-wire-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+        </div>
+
+        <!-- =================================================================== -->
+        <!-- SCREEN 5: ESCROW BOOKING & DEAL SHIELD -->
+        <!-- =================================================================== -->
+        <div class="flex flex-col items-center">
+          <div class="mb-3 flex items-center justify-between w-[375px] px-1">
+            <div class="flex items-center gap-2">
+              <span class="w-6 h-6 rounded-full bg-wire-900 text-white text-xs font-mono flex items-center justify-center font-bold">5</span>
+              <span class="text-sm font-bold text-wire-900">Screen 05: Escrow Deal Shield</span>
+            </div>
+            <span class="text-xs font-mono text-wire-500">escrow_shield.html</span>
+          </div>
+
+          <!-- Mobile Phone Shell -->
+          <div class="w-[375px] h-[780px] bg-white rounded-[36px] border-[8px] border-wire-800 shadow-xl overflow-hidden flex flex-col relative">
+            <!-- Screen Notch / Status Bar -->
+            <div class="h-8 bg-wire-900 text-white px-5 flex items-center justify-between text-[11px] font-mono tracking-tight shrink-0 select-none">
+              <span>10:45</span>
+              <div class="w-20 h-4 bg-black rounded-full mx-auto"></div>
+              <div class="flex items-center gap-1.5">
+                <span>5G</span>
+                <span>95%</span>
+              </div>
+            </div>
+
+            <!-- Screen Header -->
+            <div class="p-3.5 border-b border-wire-200 flex items-center justify-between bg-white shrink-0">
+              <div class="flex items-center gap-2">
+                <button onclick="goToScreenInSimulator(4)" class="w-7 h-7 rounded-full bg-wire-100 flex items-center justify-center text-wire-700 hover:bg-wire-200">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                </button>
+                <div>
+                  <h3 class="text-xs font-bold text-wire-900">Escrow Deal Shield</h3>
+                  <p class="text-[9px] text-wire-500 font-mono">Rekber DP Kos Bergaransi 100%</p>
+                </div>
+              </div>
+              <div class="w-7 h-7 rounded-full bg-emerald-50 border border-emerald-300 flex items-center justify-center text-emerald-700">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+              </div>
+            </div>
+
+            <!-- Screen Content (Scrollable) -->
+            <div class="flex-1 overflow-y-auto bg-white p-4 space-y-4">
+              
+              <!-- Room Confirmation Summary Card -->
+              <div class="border border-wire-300 rounded-xl p-3 bg-wire-50 space-y-2">
+                <div class="flex justify-between items-start">
+                  <div>
+                    <span class="text-[9px] font-mono uppercase bg-wire-200 text-wire-700 px-1.5 py-0.5 rounded font-bold">Kamar Terpilih</span>
+                    <h4 class="text-xs font-bold text-wire-900 mt-1">Kos Wisma Melati — Kamar 07</h4>
+                    <p class="text-[10px] text-wire-500">Lantai 2, Jendela Luar, KM Dalam</p>
+                  </div>
+                  <span class="text-xs font-mono font-bold text-wire-900">Rp 1.200.000</span>
+                </div>
+                <div class="text-[9px] text-wire-500 border-t border-wire-200 pt-1.5 flex justify-between">
+                  <span>Periode Sewa Mulai:</span>
+                  <span class="font-bold text-wire-800">1 Agustus 2026 (Semester Ganjil)</span>
+                </div>
+              </div>
+
+              <!-- Escrow Protection Explanation Diagram Box -->
+              <div class="border-2 border-emerald-600 rounded-xl p-3.5 bg-emerald-50/50 space-y-2">
+                <div class="flex items-center gap-1.5">
+                  <svg class="w-4 h-4 text-emerald-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                  <span class="text-xs font-bold text-emerald-900">Bagaimana Escrow Melindungi Anda?</span>
+                </div>
+                
+                <div class="text-[10px] text-emerald-800 space-y-1.5 pl-1">
+                  <div class="flex items-start gap-1.5">
+                    <span class="font-bold font-mono">1.</span>
+                    <span>Uang DP Anda ditahan di <strong>Rekber Resmi KOSCOUT.ID</strong> (bukan langsung ke rekening bapak/ibu kos).</span>
+                  </div>
+                  <div class="flex items-start gap-1.5">
+                    <span class="font-bold font-mono">2.</span>
+                    <span>Scout memverifikasi kuitansi fisik bermeterai & kunci kamar dari pemilik kos asli di Tembalang.</span>
+                  </div>
+                  <div class="flex items-start gap-1.5">
+                    <span class="font-bold font-mono">3.</span>
+                    <span>Dana baru diteruskan ke pemilik setelah bukti kuitansi sah diunggah ke sistem.</span>
+                  </div>
+                </div>
+
+                <div class="mt-1 pt-1.5 border-t border-emerald-200 text-[9px] font-mono text-emerald-700 font-semibold">
+                  🛡️ Garansi 100% Uang Kembali jika kamar ternyata disewakan ke orang lain / penipuan calo.
+                </div>
+              </div>
+
+              <!-- Transparent Bill Breakdown -->
+              <div class="border border-wire-200 rounded-xl p-3 bg-white space-y-2 text-[11px]">
+                <div class="font-bold text-wire-900 text-xs mb-1">Rincian Pembayaran Aman</div>
+                
+                <div class="flex justify-between text-wire-600">
+                  <span>Down Payment (DP) Booking Kos</span>
+                  <span class="font-mono text-wire-800">Rp 500.000</span>
+                </div>
+
+                <div class="flex justify-between text-wire-600">
+                  <span>Biaya Layanan Escrow Shield KOSCOUT</span>
+                  <span class="font-mono text-wire-800">Rp 10.000</span>
+                </div>
+
+                <div class="flex justify-between text-emerald-700 font-semibold">
+                  <span>Promo MABA2026 (Gratis Escrow)</span>
+                  <span class="font-mono">-Rp 10.000</span>
+                </div>
+
+                <div class="pt-2 border-t border-wire-200 flex justify-between items-center font-bold text-wire-900 text-xs">
+                  <span>Total Tagihan Dilindungi</span>
+                  <span class="font-mono text-sm text-blueprint-700">Rp 500.000</span>
+                </div>
+              </div>
+
+              <!-- Payment Method Selector -->
+              <div class="space-y-1.5">
+                <label class="text-[11px] font-bold text-wire-800 block">Pilih Metode Pembayaran</label>
+                
+                <div class="space-y-1.5">
+                  <div class="border-2 border-wire-900 rounded-lg p-2 flex items-center justify-between bg-wire-50 cursor-pointer">
+                    <div class="flex items-center gap-2">
+                      <div class="w-6 h-6 rounded bg-wire-900 text-white flex items-center justify-center font-mono text-[9px] font-bold">QR</div>
+                      <div>
+                        <div class="text-[11px] font-bold text-wire-900">QRIS Instant (Semua Bank & e-Wallet)</div>
+                        <div class="text-[9px] text-wire-500">BCA, Mandiri, GoPay, ShopeePay, OVO</div>
+                      </div>
+                    </div>
+                    <div class="w-3.5 h-3.5 rounded-full border-2 border-wire-900 flex items-center justify-center">
+                      <div class="w-2 h-2 rounded-full bg-wire-900"></div>
+                    </div>
+                  </div>
+
+                  <div class="border border-wire-300 rounded-lg p-2 flex items-center justify-between hover:bg-wire-50 cursor-pointer">
+                    <div class="flex items-center gap-2">
+                      <div class="w-6 h-6 rounded bg-wire-200 text-wire-700 flex items-center justify-center font-mono text-[9px] font-bold">VA</div>
+                      <div>
+                        <div class="text-[11px] font-bold text-wire-800">Virtual Account Bank Mandiri / BCA</div>
+                        <div class="text-[9px] text-wire-500">Verifikasi otomatis 24/7</div>
+                      </div>
+                    </div>
+                    <div class="w-3.5 h-3.5 rounded-full border border-wire-400"></div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Bottom CTA: Secure Pay -->
+            <div class="p-3.5 bg-white border-t border-wire-200 shrink-0">
+              <button onclick="alert('Simulasi Pembayaran Berhasil! DP Kos aman di Escrow Shield KOSCOUT.ID. Scout Fikri akan mengambil kuitansi fisik bermeterai di Tembalang.')" class="w-full py-2.5 bg-wire-900 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 hover:bg-wire-800 shadow-md transition-colors">
+                <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                <span>Bayar Rp 500.000 (Escrow Protected)</span>
+              </button>
+              <p class="text-[9px] text-center text-wire-400 mt-1.5 font-mono">
+                Enkripsi SSL 256-bit • Rekber Terdaftar PKM-K KWU Undip
+              </p>
+            </div>
+          </div>
+
+          <!-- Screen Annotation Box -->
+          <div class="ux-annotation mt-4 w-[375px] bg-white border border-wire-300 rounded-xl p-3.5 shadow-sm text-xs space-y-1.5">
+            <div class="flex items-center justify-between">
+              <span class="font-mono font-bold text-[10px] text-blueprint-600 uppercase">Anotasi UX #05</span>
+              <span class="text-[10px] bg-wire-100 px-1.5 py-0.5 rounded text-wire-600">Anti-Scam Closure</span>
+            </div>
+            <p class="text-wire-700 leading-relaxed font-medium">
+              <strong>Penghilang Keraguan Terbesar:</strong> Momok terbesar pencari kos perantau adalah calo fiktif di media sosial yang kabur setelah DP ditransfer.
+            </p>
+            <ul class="list-disc list-inside text-wire-500 space-y-1 text-[11px]">
+              <li>Dana dipegang di rekening penampung resmi KOSCOUT dan baru dilepas saat ada bukti kuitansi fisik sah.</li>
+              <li>Memberikan jaminan <em>100% Money-Back</em> bilamana terjadi double-booking oleh pemilik kos.</li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ======================================================================= -->
+    <!-- VIEW MODE 2: INTERACTIVE DEVICE SIMULATOR (FOKUS 1 LAYAR + KLIK AKTIF) -->
+    <!-- ======================================================================= -->
+    <div id="simulator-view" class="hidden max-w-4xl mx-auto py-4">
+      
+      <!-- Simulator Controls Bar -->
+      <div class="bg-white border border-wire-300 rounded-2xl p-4 mb-6 shadow-sm flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <span class="text-xs font-mono font-bold text-blueprint-600 uppercase">Interactive Walkthrough Simulator</span>
+          <h2 class="text-base font-bold text-wire-900" id="sim-screen-title">Screen 01: Beranda & Discovery</h2>
+          <p class="text-xs text-wire-500" id="sim-screen-desc">Layar awal penemuan layanan, seleksi paket survei kos, dan social proof.</p>
+        </div>
+
+        <!-- Jump to Screen Buttons -->
+        <div class="flex items-center gap-1.5 bg-wire-100 p-1.5 rounded-xl border border-wire-300 text-xs font-mono font-bold">
+          <button onclick="goToScreenInSimulator(1)" id="sim-nav-1" class="w-8 h-8 rounded-lg bg-wire-900 text-white shadow-sm flex items-center justify-center transition-all">1</button>
+          <button onclick="goToScreenInSimulator(2)" id="sim-nav-2" class="w-8 h-8 rounded-lg bg-transparent text-wire-600 hover:text-wire-900 flex items-center justify-center transition-all">2</button>
+          <button onclick="goToScreenInSimulator(3)" id="sim-nav-3" class="w-8 h-8 rounded-lg bg-transparent text-wire-600 hover:text-wire-900 flex items-center justify-center transition-all">3</button>
+          <button onclick="goToScreenInSimulator(4)" id="sim-nav-4" class="w-8 h-8 rounded-lg bg-transparent text-wire-600 hover:text-wire-900 flex items-center justify-center transition-all">4</button>
+          <button onclick="goToScreenInSimulator(5)" id="sim-nav-5" class="w-8 h-8 rounded-lg bg-transparent text-wire-600 hover:text-wire-900 flex items-center justify-center transition-all">5</button>
+        </div>
+      </div>
+
+      <!-- Simulator Stage & Explanatory Sidebar -->
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-start justify-center">
+        
+        <!-- Phone Frame Container -->
+        <div class="md:col-span-6 flex justify-center">
+          <div id="sim-phone-container" class="phone-mockup-shadow rounded-[42px] bg-wire-900 p-2.5">
+            <!-- Simulated Content Container (cloned dynamically or mirrored) -->
+            <div id="sim-phone-screen" class="w-[375px] h-[740px] bg-white rounded-[32px] overflow-hidden flex flex-col relative">
+              <!-- Content will be injected here dynamically -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Simulator Details & UX Rationales Panel -->
+        <div class="md:col-span-6 space-y-4">
+          
+          <div class="bg-white border border-wire-300 rounded-2xl p-5 shadow-sm space-y-3">
+            <div class="flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-blueprint-600"></span>
+              <h3 class="text-sm font-bold text-wire-900 uppercase font-mono" id="sim-sidebar-headline">Petunjuk Interaksi Layar</h3>
+            </div>
+            <div class="text-xs text-wire-600 space-y-2 leading-relaxed" id="sim-sidebar-instructions">
+              <!-- Dynamic instructions based on current screen -->
+            </div>
+          </div>
+
+          <!-- Business Model Mapping Card -->
+          <div class="bg-white border border-wire-300 rounded-2xl p-5 shadow-sm space-y-3">
+            <div class="flex items-center justify-between">
+              <h4 class="text-xs font-bold text-wire-800 uppercase font-mono">Koneksi ke Business Model Canvas (BMC)</h4>
+              <span class="text-[10px] bg-wire-100 text-wire-700 px-2 py-0.5 rounded font-mono font-bold">KWU S-7</span>
+            </div>
+            <div class="text-xs text-wire-600 space-y-1.5" id="sim-bmc-mapping">
+              <!-- Dynamic BMC points -->
+            </div>
+          </div>
+
+          <!-- Quick Navigation Actions -->
+          <div class="flex items-center gap-3 pt-2">
+            <button onclick="stepSimulator(-1)" class="flex-1 py-2 bg-wire-100 border border-wire-300 text-wire-800 rounded-xl text-xs font-bold hover:bg-wire-200 transition-colors">
+              &larr; Layar Sebelumnya
+            </button>
+            <button onclick="stepSimulator(1)" class="flex-1 py-2 bg-wire-900 text-white rounded-xl text-xs font-bold hover:bg-wire-800 transition-colors">
+              Layar Selanjutnya &rarr;
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL: 25-POINT AUDIT PROTOCOL REFERENCE -->
+  <!-- ========================================================================= -->
+  <div id="protocol-modal" class="fixed inset-0 bg-wire-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-3xl rounded-2xl border border-wire-300 shadow-2xl overflow-hidden max-h-[90vh] flex flex-col">
+      
+      <!-- Modal Header -->
+      <div class="p-4 border-b border-wire-200 flex items-center justify-between bg-wire-50">
+        <div>
+          <span class="text-xs font-mono font-bold text-blueprint-600 uppercase">Standar Mutu KOSCOUT.ID</span>
+          <h3 class="text-base font-bold text-wire-900">Protokol Audit Fisik 25 Poin (Standardized Ground Checklist)</h3>
+        </div>
+        <button onclick="toggleProtocolModal(false)" class="w-8 h-8 rounded-full bg-white border border-wire-300 flex items-center justify-center text-wire-600 hover:bg-wire-100">
+          ✕
+        </button>
+      </div>
+
+      <!-- Modal Body (Checklist Grid) -->
+      <div class="p-6 overflow-y-auto space-y-6 text-xs">
+        
+        <p class="text-wire-600 leading-relaxed">
+          Protokol ini merupakan <strong>Standar Operasional Prosedur (SOP)</strong> yang wajib dijalankan oleh seluruh Mitra Scout Mahasiswa di lokasi kos sasaran sebelum laporan diterbitkan ke calon mahasiswa baru.
+        </p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          
+          <!-- Category A -->
+          <div class="border border-wire-300 rounded-xl p-4 bg-wire-50 space-y-2">
+            <div class="flex items-center justify-between border-b border-wire-200 pb-2">
+              <span class="font-bold text-wire-900 text-xs flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-emerald-600"></span>
+                A. Air & Sanitasi (Critical Priority)
+              </span>
+              <span class="font-mono text-[10px] text-wire-500">5 Poin</span>
+            </div>
+            <ul class="space-y-1.5 text-wire-700 text-[11px]">
+              <li><strong>1. Kejernihan & Bau Air:</strong> Tes bau karat/besi sumur menggunakan botol bening.</li>
+              <li><strong>2. Tekanan Air Jam Sibuk:</strong> Debit shower & kran saat jam sibuk pagi (06:00 - 08:00).</li>
+              <li><strong>3. Toren Cadangan:</strong> Cek ketersediaan & kapasitas tandon air saat listrik padam.</li>
+              <li><strong>4. Kondisi Kloset & Drainase:</strong> Kelancaran pembuangan air dan jenis kloset (duduk/jongkok).</li>
+              <li><strong>5. Kelembapan Dinding:</strong> Deteksi jamur rembesan air pada dinding kamar mandi.</li>
+            </ul>
+          </div>
+
+          <!-- Category B -->
+          <div class="border border-wire-300 rounded-xl p-4 bg-wire-50 space-y-2">
+            <div class="flex items-center justify-between border-b border-wire-200 pb-2">
+              <span class="font-bold text-wire-900 text-xs flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-blueprint-600"></span>
+                B. Sinyal Seluler & Kelistrikan
+              </span>
+              <span class="font-mono text-[10px] text-wire-500">5 Poin</span>
+            </div>
+            <ul class="space-y-1.5 text-wire-700 text-[11px]">
+              <li><strong>6. Speedtest WiFi Kos:</strong> Kecepatan nyata unduh/unggah & latensi saat di kamar.</li>
+              <li><strong>7. Kekuatan Sinyal Seluler:</strong> Uji bar sinyal (Telkomsel, Indosat Ooredoo, XL).</li>
+              <li><strong>8. Jumlah Stopkontak:</strong> Posisi & kuantitas colokan listrik dinding untuk laptop/HP.</li>
+              <li><strong>9. Sistem Pembayaran Listrik:</strong> Token individual kamar vs iuran sharing bulanan.</li>
+              <li><strong>10. Kestabilan Voltase:</strong> Apakah MCB sering trip saat AC & pemanas menyala bersamaan.</li>
+            </ul>
+          </div>
+
+          <!-- Category C -->
+          <div class="border border-wire-300 rounded-xl p-4 bg-wire-50 space-y-2">
+            <div class="flex items-center justify-between border-b border-wire-200 pb-2">
+              <span class="font-bold text-wire-900 text-xs flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-amber-600"></span>
+                C. Kamar Fisik & Kenyamanan
+              </span>
+              <span class="font-mono text-[10px] text-wire-500">5 Poin</span>
+            </div>
+            <ul class="space-y-1.5 text-wire-700 text-[11px]">
+              <li><strong>11. Dimensi Fisik Riil:</strong> Pengukuran meteran nyata panjang x lebar vs klaim iklan.</li>
+              <li><strong>12. Kondisi Kasur:</strong> Higienitas, keempukan pegas springbed, dan ketiadaan tungau.</li>
+              <li><strong>13. Ventilasi & Sirkulasi:</strong> Ada tidaknya jendela luar langsung yang dapat dibuka.</li>
+              <li><strong>14. Pencahayaan Alami:</strong> Sudut masuknya sinar matahari langsung saat siang hari.</li>
+              <li><strong>15. Peredaman Suara:</strong> Kebisingan dari knalpot jalan raya atau kamar sebelah.</li>
+            </ul>
+          </div>
+
+          <!-- Category D -->
+          <div class="border border-wire-300 rounded-xl p-4 bg-wire-50 space-y-2">
+            <div class="flex items-center justify-between border-b border-wire-200 pb-2">
+              <span class="font-bold text-wire-900 text-xs flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-purple-600"></span>
+                D. Lingkungan, Keamanan & Pemilik
+              </span>
+              <span class="font-mono text-[10px] text-wire-500">10 Poin Tambahan</span>
+            </div>
+            <ul class="space-y-1.5 text-wire-700 text-[11px]">
+              <li><strong>16. Keamanan Gerbang:</strong> Gembok gerbang 24 jam, CCTV aktif, penerangan malam.</li>
+              <li><strong>17. Kapasitas Parkir:</strong> Luas parkir motor tertutup & ketersediaan slot mobil.</li>
+              <li><strong>18. Aturan Jam Malam:</strong> Fleksibilitas kunci sendiri vs jam tutup malam ketat.</li>
+              <li><strong>19. Karakter Pemilik / Penjaga:</strong> Ramah, komunikatif, atau terlalu restriktif.</li>
+              <li><strong>20. Jarak Jalan Kaki ke Kampus:</strong> Waktu tempuh menit nyata ke gerbang fakultas.</li>
+              <li><strong>21-25. Fasilitas Penunjang:</strong> Jarak ke laundry kiloan, warteg murah, minimarket, dapur bersama, & tempat jemuran hujan.</li>
+            </ul>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="p-4 border-t border-wire-200 bg-wire-50 flex justify-end">
+        <button onclick="toggleProtocolModal(false)" class="px-4 py-2 bg-wire-900 text-white rounded-lg text-xs font-bold hover:bg-wire-800">
+          Tutup Panduan Protokol
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- FOOTER -->
+  <!-- ========================================================================= -->
+  <footer class="bg-white border-t border-wire-300 py-6 px-4 text-center text-xs text-wire-500">
+    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
+      <div class="flex items-center gap-2">
+        <span class="font-bold text-wire-800">KOSCOUT.ID</span>
+        <span>•</span>
+        <span>Mata & Kaki Objektif Pencari Kos di Tembalang</span>
+      </div>
+      <div class="text-[11px] font-mono text-wire-400">
+        Rancangan Tugas Mata Kuliah Kewirausahaan (Semester 7) — Universitas Diponegoro
+      </div>
+    </div>
+  </footer>
+
+  <!-- ========================================================================= -->
+  <!-- JAVASCRIPT STATE CONTROLLER -->
+  <!-- ========================================================================= -->
+  <script>
+    let currentSimScreen = 1;
+    let annotationsVisible = true;
+
+    // Switch between Artboard Canvas and Device Simulator
+    function switchViewMode(mode) {
+      const canvasView = document.getElementById('canvas-view');
+      const simView = document.getElementById('simulator-view');
+      const btnCanvas = document.getElementById('btn-mode-canvas');
+      const btnSim = document.getElementById('btn-mode-sim');
+
+      if (mode === 'canvas') {
+        canvasView.classList.remove('hidden');
+        simView.classList.add('hidden');
+
+        btnCanvas.className = "px-3 py-1.5 rounded-md transition-all flex items-center gap-1.5 bg-white text-wire-900 shadow-sm border border-wire-200";
+        btnSim.className = "px-3 py-1.5 rounded-md transition-all flex items-center gap-1.5 text-wire-600 hover:text-wire-900";
+      } else {
+        canvasView.classList.add('hidden');
+        simView.classList.remove('hidden');
+
+        btnSim.className = "px-3 py-1.5 rounded-md transition-all flex items-center gap-1.5 bg-white text-wire-900 shadow-sm border border-wire-200";
+        btnCanvas.className = "px-3 py-1.5 rounded-md transition-all flex items-center gap-1.5 text-wire-600 hover:text-wire-900";
+
+        renderSimulatorScreen(currentSimScreen);
+      }
+    }
+
+    // Toggle UX annotations visibility
+    function toggleAnnotations() {
+      annotationsVisible = !annotationsVisible;
+      const notes = document.querySelectorAll('.ux-annotation');
+      const statusText = document.getElementById('notes-status-text');
+      const indicator = document.getElementById('notes-indicator');
+
+      notes.forEach(el => {
+        el.style.display = annotationsVisible ? 'block' : 'none';
+      });
+
+      statusText.innerText = annotationsVisible ? 'ON' : 'OFF';
+      indicator.className = annotationsVisible ? 'w-2 h-2 rounded-full bg-blueprint-500' : 'w-2 h-2 rounded-full bg-wire-300';
+    }
+
+    // Toggle 25-Point Protocol Modal
+    function toggleProtocolModal(show) {
+      const modal = document.getElementById('protocol-modal');
+      if (show) {
+        modal.classList.remove('hidden');
+      } else {
+        modal.classList.add('hidden');
+      }
+    }
+
+    // Simulator Navigation
+    const screenData = [
+      {
+        id: 1,
+        title: "Screen 01: Beranda & Discovery",
+        desc: "Layar awal penemuan layanan, seleksi paket survei kos, dan social proof.",
+        instructions: `
+          <p>• Pengguna melihat lokasi default <strong>Tembalang, Undip</strong>.</p>
+          <p>• Pengguna dapat mengeklik <strong>Paket Triple Scout (Rp 99.000)</strong> sebagai paket paling populer.</p>
+          <p>• Klik tombol <em>"Pesan Scout Sekarang"</em> untuk beralih ke form kriteria.</p>
+        `,
+        bmc: `
+          <p><strong>Value Propositions:</strong> On-Demand Scout Matching & model Pay-As-You-Go terjangkau.</p>
+          <p><strong>Channels:</strong> Mobile PWA koscout.id & hotline media sosial.</p>
+        `
+      },
+      {
+        id: 2,
+        title: "Screen 02: Kriteria & Filter 25 Poin",
+        desc: "Form input kriteria hunian, zonasi fakultas, budget, dan filter teknis.",
+        instructions: `
+          <p>• Pengguna memilih apakah sudah punya target kos sendiri atau minta rekomendasi scout.</p>
+          <p>• Tentukan fakultas terdekat (misal: FT Undip) dan tipe kos (Putri/Putra).</p>
+          <p>• Centang filter wajib (Air bersih non-besi, WiFi stabil, KM dalam).</p>
+          <p>• Klik <em>"Konfirmasi & Cari Mitra Scout"</em> untuk memulai dispatch.</p>
+        `,
+        bmc: `
+          <p><strong>Customer Segments:</strong> Mahasiswa Baru Jalur Mandiri & Orang Tua Luar Pulau.</p>
+          <p><strong>Key Activities:</strong> Formulasi kriteria audit micro-ground.</p>
+        `
+      },
+      {
+        id: 3,
+        title: "Screen 03: Live Scout Matching & Dispatch",
+        desc: "Pencocokan gig-economy ke mitra mahasiswa senior terdekat secara real-time.",
+        instructions: `
+          <p>• Tampilan radar melacak posisi scout mahasiswa terverifikasi menuju kos sasaran.</p>
+          <p>• Kartu profil scout menampilkan bukti identitas KTM & pakta integritas anti-calo.</p>
+          <p>• Pengguna dapat membuka chat atau memulai <strong>Live Interactive Walkthrough</strong>.</p>
+          <p>• Klik <em>"Buka Laporan 25 Poin"</em> untuk melihat hasil uji lapangan.</p>
+        `,
+        bmc: `
+          <p><strong>Key Partners:</strong> Mitra Scout Mahasiswa Senior (Gig-Workers).</p>
+          <p><strong>Cost Structure:</strong> Bagi hasil komisi mitra scout (65% = Rp 65.000/order).</p>
+        `
+      },
+      {
+        id: 4,
+        title: "Screen 04: Laporan Audit Objektif 25 Poin",
+        desc: "Dokumen deliverable hasil uji air, speedtest WiFi, sinyal HP, dan dimensi riil.",
+        instructions: `
+          <p>• Skor kelayakan dihitung otomatis (88/100).</p>
+          <p>• Telusuri tab <strong>Air & Sanitasi</strong>, <strong>Sinyal & Listrik</strong>, dan <strong>Dimensi Riil</strong>.</p>
+          <p>• Lihat catatan transparansi: ukuran riil 3.2x3m padahal iklan klaim 4x4m.</p>
+          <p>• Klik <em>"Kunci Kamar via Escrow Shield"</em> untuk melanjutkan ke tahap rekber DP.</p>
+        `,
+        bmc: `
+          <p><strong>Value Propositions:</strong> 100% Unbiased Ground Eyes & 25-Point Micro Ground Audit.</p>
+          <p><strong>Customer Relationships:</strong> Objective Trusted Advisor (Sahabat Lokal Pertama).</p>
+        `
+      },
+      {
+        id: 5,
+        title: "Screen 05: Escrow Deal Shield & Booking",
+        desc: "Layanan rekening bersama DP kos bergaransi 100% uang kembali.",
+        instructions: `
+          <p>• Pelajari alur keamanan 3 langkah proteksi rekber KOSCOUT.</p>
+          <p>• Lihat rincian DP Rp 500.000 dengan garansi anti-penipuan calo.</p>
+          <p>• Pilih metode pembayaran QRIS Instant atau Virtual Account Bank.</p>
+          <p>• Klik <em>"Bayar Rp 500.000"</em> untuk simulasi penguncian kamar sah.</p>
+        `,
+        bmc: `
+          <p><strong>Revenue Streams:</strong> Take-rate platform (35%) & Jasa Escrow Shield Fee (Rp 10.000).</p>
+          <p><strong>Pain Relievers:</strong> 100% Escrow Shield Protection (Menghapus scam DP kos di medsos).</p>
+        `
+      }
+    ];
+
+    function goToScreenInSimulator(screenIndex) {
+      currentSimScreen = screenIndex;
+      renderSimulatorScreen(screenIndex);
+      
+      // Auto-switch to simulator view if in canvas mode
+      const simView = document.getElementById('simulator-view');
+      if (simView.classList.contains('hidden')) {
+        switchViewMode('simulator');
+      }
+    }
+
+    function stepSimulator(delta) {
+      let nextScreen = currentSimScreen + delta;
+      if (nextScreen < 1) nextScreen = 1;
+      if (nextScreen > 5) nextScreen = 5;
+      goToScreenInSimulator(nextScreen);
+    }
+
+    function renderSimulatorScreen(screenIndex) {
+      const data = screenData[screenIndex - 1];
+
+      // Update Top Title & Nav Buttons
+      document.getElementById('sim-screen-title').innerText = data.title;
+      document.getElementById('sim-screen-desc').innerText = data.desc;
+      document.getElementById('sim-sidebar-instructions').innerHTML = data.instructions;
+      document.getElementById('sim-bmc-mapping').innerHTML = data.bmc;
+
+      for (let i = 1; i <= 5; i++) {
+        const btn = document.getElementById(`sim-nav-${i}`);
+        if (i === screenIndex) {
+          btn.className = "w-8 h-8 rounded-lg bg-wire-900 text-white shadow-sm flex items-center justify-center transition-all";
+        } else {
+          btn.className = "w-8 h-8 rounded-lg bg-transparent text-wire-600 hover:text-wire-900 flex items-center justify-center transition-all";
+        }
+      }
+
+      // Clone screen content from canvas
+      const canvasScreens = document.querySelectorAll('#canvas-view .w-\\[375px\\].h-\\[780px\\]');
+      const targetCanvasScreen = canvasScreens[screenIndex - 1];
+      const phoneScreen = document.getElementById('sim-phone-screen');
+      
+      if (targetCanvasScreen && phoneScreen) {
+        phoneScreen.innerHTML = targetCanvasScreen.innerHTML;
+      }
+    }
+
+    // Initialize on load
+    window.addEventListener('DOMContentLoaded', () => {
+      // Default to Canvas view initially
+      switchViewMode('canvas');
+    });
+  </script>
+</body>
+</html>
